@@ -83,6 +83,34 @@ def DateFromText(text):
         return datetime.date(month=month, day=day, year=year)
 
 
+PM=['pm','p.m.','afternoon','evening']
+AM=['am','a.m.','morning']
+def TimeFromText(text):
+    text = text.lower()
+    hour=-1
+    minute=0
+    second=0
+    countnumber=0
+    for word in re.split(' |:',text):
+        if word.isdigit():
+            if countnumber==0:
+                hour = int(word)
+                countnumber+=1
+            elif countnumber==1:
+                minute = int(word)
+    foundpm=[i for i in PM if(i in text.split())]
+    foundam=[i for i in AM if(i in text.split())]
+    if bool(foundpm) and hour>=1 and hour<=11:
+        hour+=12
+    if bool(foundam) and hour==12:
+        hour-=12
+
+
+    if hour!=-1:
+        return datetime.time(hour=hour,minute=minute,second=second)
+    else:
+        return None
+
 
 
 
@@ -131,31 +159,29 @@ class TaskPage(Frame):
         frametask.pack(fill=X)
         labeltask = Label(frametask, text="Task:", width=6)
         labeltask.pack(side=LEFT, padx=5, pady=5)
-        entrytask = Entry(frametask,textvariable=self.task)
-        entrytask.pack(side=LEFT,padx=5)
-        speechtask = Button(frametask,text="Speak",command=lambda: self.get_task())
-        speechtask.pack(side=LEFT, padx=5, pady=5)
+        self.entrytask = Entry(frametask,textvariable=self.task)
+        self.entrytask.pack(side=LEFT,padx=5)
 
         self.date = StringVar()
         framedate = Frame(self)
         framedate.pack(fill=X)
         labeldate = Label(framedate, text="Date:", width=6)
         labeldate.pack(side=LEFT, padx=5, pady=5)
-        entrydate = Entry(framedate,textvariable=self.date)
-        entrydate.pack(side=LEFT, padx=5)
-        speechdate = Button(framedate, text="Speak",command=lambda: self.get_date())
-        speechdate.pack(side=LEFT, padx=5, pady=5)
+        self.entrydate = Entry(framedate,textvariable=self.date)
+        self.entrydate.pack(side=LEFT, padx=5)
 
+        self.time = StringVar()
         frametime = Frame(self)
         frametime.pack(fill=X)
         labeltime = Label(frametime, text="Time:", width=6)
         labeltime.pack(side=LEFT, padx=5, pady=5)
-        entrytime = Entry(frametime)
-        entrytime.pack(side=LEFT, padx=5, expand=True)
-        speechtime = Button(frametime, text="Speak",command=lambda: self.get_time())
-        speechtime.pack(side=LEFT, padx=5, pady=5)
+        self.entrytime = Entry(frametime,textvariable=self.time)
+        self.entrytime.pack(side=LEFT, padx=5, expand=True)
 
-        addtask=Button(self,text="Add Task")
+        speechtask = Button(self, text="Speak", command=lambda: self.speechToTask())
+        speechtask.pack(padx=5, pady=5)
+
+        addtask=Button(self,text="Add Task",command=lambda:self.add_task())
         addtask.pack()
         todoButton = Button(self, text="To Do", fg="yellow", bg="red", font=("arial", 16, "bold"),
                                  command=lambda: master.switch_frame(ToDoPage))
@@ -164,19 +190,45 @@ class TaskPage(Frame):
                                   command=lambda: master.switch_frame(NotesPage))
         notesButton.pack()
 
-    def get_task(self):
+    def speechToTask(self):
+        speak("Please specify the task to be performed")
         text = get_audio()
         self.task.set(text)
-
-    def get_date(self):
+        speak("Please specify the day")
         text = get_audio()
-        tdate=DateFromText(text)
+        tdate = DateFromText(text)
         self.date.set(tdate)
-
-    def get_time(self):
+        speak("Please mention the time")
         text = get_audio()
-        tdate=DateFromText(text)
-        self.date.set(tdate)
+        time=TimeFromText(text) #get time from text
+        self.time.set(time)
+
+    def add_task(self):
+        try:
+            connection = psycopg2.connect(user="usertm",
+                                          password="password",
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="TaskManager")
+            cursor = connection.cursor()
+            task=self.entrytask.get()
+            print(task)
+            date = self.entrydate.get()
+            print(date)
+            time = self.entrytime.get()
+            print(time)
+            str = "INSERT INTO task(task,date,time) VALUES ('" + task + "','" + date + "','"+time+"');"
+            cursor.execute(str)
+            connection.commit()
+            speak("Task added successfully")
+        except (Exception, psycopg2.DatabaseError) as error:
+            connection.rollback()
+            print("Error while using PostgreSQL table", error)
+        finally:
+            # closing database connection.
+            if (connection):
+                cursor.close()
+                connection.close()
 
 
 class ToDoPage(Frame):
