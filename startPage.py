@@ -115,6 +115,9 @@ class StartPage(Frame):
             cursor.execute(str)
             connection.commit()
             assistant_speaks("Task added successfully")
+            self.inputTask.delete(0, END)
+            self.inputDate.delete(0, END)
+            self.inputTime.delete(0, END)
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
@@ -166,32 +169,35 @@ class SchedulePage(Frame):
 class DisplayTaskPage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.back = Button(self, text="Back",
-                           fg="white", bg="DeepPink2",
+        backimage = PhotoImage(file="images\\back3.png")
+        backicon = backimage.subsample(10, 10)
+        self.back = Button(self, text="Back",image=backicon,
                            command=lambda: master.switch_frame(SchedulePage))
-        self.back.grid(row=0, column=0,columnspan=4)
-        self.display = Label(self, text="Display Tasks for which of the following:")
-        self.display.grid(row=1, column=0,columnspan=4)
+        self.back.image=backicon
+        self.back.grid(row=0, column=0,columnspan=5)
+        self.display = Label(self, text="Display Tasks for which of the following:",font=("Lucida Bright", "10", "bold"))
+        self.display.grid(row=1, column=0,columnspan=5)
+        self.font=("Sans Serif","11")
         self.radiovar = StringVar()
         # Option for specific day, btw two days, upcoming tasks or all task in the db
         self.R1 = Radiobutton(self, text="Specific Day",variable=self.radiovar, value="Specific Day", tristatevalue="x",
-                              command=self.displayTask)
+                              font=self.font,command=self.displayTask)
         self.R1.grid(row=2, column=0,columnspan=2)
         self.R2 = Radiobutton(self, text="Between two days", variable=self.radiovar, value="Between two days", tristatevalue="x",
-                              command=self.displayTask)
-        self.R2.grid(row=2, column=2,columnspan=2)
+                              font=self.font,command=self.displayTask)
+        self.R2.grid(row=2, column=2,columnspan=3)
         self.R3 = Radiobutton(self, text="All Upcoming", variable=self.radiovar, value="All Upcoming", tristatevalue="x",
-                              command=self.displayTask)
+                              font=self.font,command=self.displayTask)
         self.R3.grid(row=3, column=0,columnspan=2)
-        self.R4 = Radiobutton(self, text="All", variable=self.radiovar, value="All",
-                              tristatevalue="x",
-                              command=self.displayTask)
-        self.R4.grid(row=3, column=2,columnspan=2)
+        self.R4 = Radiobutton(self, text="All", variable=self.radiovar, value="All",tristatevalue="x",
+                              font=self.font,command=self.displayTask)
+        self.R4.grid(row=3, column=2,columnspan=3)
 
-        self.displayTask = Label(self)
-        self.displayTask.grid(row=4,column=0,columnspan=4)
+        self.displayTask = Label(self,font=("Lucida Bright", "12", "bold"))
+        self.displayTask.grid(row=4,column=0,columnspan=5,pady=10)
 
     def displayTask(self):
+
         selection = self.radiovar.get()
         input = False
         # For specific Day only one speech input is taken
@@ -261,17 +267,28 @@ class DisplayTaskPage(Frame):
                 index=5
                 if len(tasks)>0:
                     stringtask="Task-Id\t\tTask\t\tDate\t\tTime\n"
-                    Label(self, text="Task").grid(row=index, column=0)
-                    Label(self, text="Date").grid(row=index, column=1)
-                    Label(self, text="Time").grid(row=index, column=2)
+                    Label(self, text="Task",font=("Artefact","12","bold")).grid(row=index, column=0)
+                    Label(self, text="Date",font=("Artefact","12","bold")).grid(row=index, column=1)
+                    Label(self, text="Time",font=("Artefact","12","bold")).grid(row=index, column=2)
 
+                    dimage= PhotoImage(file='images\delete.png')
+                    deleteicon = dimage.subsample(10, 10)
+                    eimage= PhotoImage(file='images\edit.png')
+                    editicon = eimage.subsample(10, 10)
                     # each task is displayed in a row and a delete button is associated with it
                     for task in tasks:
                         index = index + 1
-                        Label(self, text=task[1]).grid(row=index, column=0)
-                        Label(self, text=str(task[2])).grid(row=index, column=1)
-                        Label(self, text=str(task[3])).grid(row=index , column=2)
-                        Button(self, text="Delete",command=lambda id=task[0],row=index: self.deleteTask(id,row)).grid(row=index, column=3)
+                        Label(self, text=task[1],font=self.font,padx=5,pady=5).grid(row=index, column=0)
+                        Label(self, text=str(task[2]),font=self.font,padx=5,pady=5).grid(row=index, column=1)
+                        Label(self, text=str(task[3]),font=self.font,padx=5,pady=5).grid(row=index , column=2)
+                        d=Button(self,text="Delete",image=deleteicon,
+                                 command=lambda id=task[0],row=index: self.deleteTask(id,row,index+1))
+                        d.image = deleteicon
+                        d.grid(row=index, column=3)
+                        e = Button(self, text="Edit", image=editicon,
+                                   command=lambda id=task[0], row=index: self.displayEdit(id,row,index+1))
+                        e.image = editicon
+                        e.grid(row=index, column=4)
                         stringtask +=str(task[0])+"\t\t"+task[1]+"\t\t"+str(task[2])+"\t\t"+str(task[3])+"\n"
                     print(stringtask)
                     assistant_speaks("The Schedule is displayed")
@@ -291,7 +308,7 @@ class DisplayTaskPage(Frame):
             assistant_speaks("Please repeat the process. Couldn't identify your audio or date mentioned")
 
 
-    def deleteTask(self,id,row):
+    def deleteTask(self,id,row,index):
         try:
             connection = psycopg2.connect(user="usertm",
                                           password="password",
@@ -301,10 +318,125 @@ class DisplayTaskPage(Frame):
             cursor = connection.cursor()
             query="DELETE FROM task WHERE task_id="+str(id)+";"
             cursor.execute(query)
+            for gridrow in self.grid_slaves():
+                if int(gridrow.grid_info()["row"]) >= index:
+                    gridrow.grid_forget()
             for label in self.grid_slaves():
                 if int(label.grid_info()["row"])==row:
                     label.grid_forget()
             assistant_speaks("Deletion Successful")
+            connection.commit()
+        except (Exception , psycopg2.DatabaseError) as error:
+            connection.rollback()
+            print("Error while using PostgreSQL table", error)
+        finally:
+        # closing database connection.
+            if (connection):
+                cursor.close()
+                connection.close()
+
+    def displayEdit(self,id,row,index):
+        i=index
+        try:
+            connection = psycopg2.connect(user="usertm",
+                                          password="password",
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="TaskManager")
+            cursor = connection.cursor()
+            query="SELECT * FROM task WHERE task_id="+str(id)+";"
+            cursor.execute(query)
+            task = cursor.fetchone()
+            Label(self, text="").grid(row=i, column=0, columnspan=5)
+            i+=1
+            ntask = StringVar(value=task[1])
+            ndate = StringVar(value=task[2])
+            ntime = StringVar(value=task[3])
+            Label(self, text="Task:",font=("Lucida Bright", "10", "bold")).grid(row=i, column=0,columnspan=2)
+            self.inputTask=Entry(self,textvariable=ntask)
+            self.inputTask.grid(row=i,column=2,columnspan=2)
+            i+=1
+            Label(self, text="Date:",font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
+            self.inputDate=Entry(self, textvariable=ndate)
+            self.inputDate.grid(row=i, column=2, columnspan=2)
+            i += 1
+            Label(self, text="Time:",font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
+            self.inputTime=Entry(self, textvariable=ntime)
+            self.inputTime.grid(row=i, column=2, columnspan=2)
+            i += 1
+            mike = PhotoImage(file='images\mike5.png')
+            mike = mike.subsample(15, 15)
+            mikeButton = Button(self, image=mike,
+                                command=lambda: self.speakTask())
+            mikeButton.image = mike
+            mikeButton.grid(row=i, column=1)
+
+            simage = PhotoImage(file='images\save_edit.png')
+            saveicon = simage.subsample(10, 10)
+            s = Button(self, text="Save Changes",font=("Lucida Bright", "10", "bold"), image=saveicon, compound=LEFT,
+                       command=lambda : self.editTask(id, row, index))
+            s.image = saveicon
+            s.grid(row=i, column=2, columnspan=3)
+            assistant_speaks("Task details are displayed for editing")
+            connection.commit()
+        except (Exception , psycopg2.DatabaseError) as error:
+            connection.rollback()
+            print("Error while using PostgreSQL table", error)
+        finally:
+        # closing database connection.
+            if (connection):
+                cursor.close()
+                connection.close()
+
+    def speakTask(self):
+        assistant_speaks("Is there any change in task?")
+        text = get_audio()
+        text=text.lower()
+        if text.count("yes")>0:
+            assistant_speaks("Please specify the task")
+            text = get_audio()
+            self.task.set(text)
+        assistant_speaks("Is there any change in date?")
+        text = get_audio()
+        text = text.lower()
+        if text.count("yes") > 0:
+            assistant_speaks("Please specify the day")
+            text = get_audio()
+            tdate = DateFromText(text)  # get time from date
+            self.date.set(tdate)
+        assistant_speaks("Is there any change in time?")
+        text = get_audio()
+        text = text.lower()
+        if text.count("yes") > 0:
+            assistant_speaks("Please specify the time")
+            text = get_audio()
+            time = TimeFromText(text)  # get time from text
+            self.time.set(time)
+
+    def editTask(self,id,row,index):
+        try:
+            connection = psycopg2.connect(user="usertm",
+                                          password="password",
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="TaskManager")
+            cursor = connection.cursor()
+            cursor = connection.cursor()
+            task = self.inputTask.get()
+            print(task)
+            date = self.inputDate.get()
+            print(date)
+            time = self.inputTime.get()
+            print(time)
+            query = "UPDATE task SET task='" + task + "',date='" + date + "',time='" + time + "' WHERE task_id="+str(id)+";"
+            cursor.execute(query)
+            for gridrow in self.grid_slaves():
+                if int(gridrow.grid_info()["row"])>=index:
+                    gridrow.grid_forget()
+            Label(self, text=task).grid(row=row, column=0)
+            Label(self, text=date).grid(row=row, column=1)
+            Label(self, text=time).grid(row=row, column=2)
+            assistant_speaks("Task edited successfully")
             connection.commit()
         except (Exception , psycopg2.DatabaseError) as error:
             connection.rollback()
