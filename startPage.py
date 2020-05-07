@@ -12,72 +12,100 @@ class StartPage(Frame):
         Frame.__init__(self, master)
         self.master = master
 
-        # schedule and help frame
-        self.topButtonFrame = Frame(self, width=300, height=50)
-        self.topButtonFrame.pack(fill=BOTH, expand=TRUE, ipadx=10, pady=20)
-        schedule = Button(self.topButtonFrame, text="schedule",
-                          fg="white", bg="DeepPink2",
-                          command=lambda: self.master.switch_frame(SchedulePage))
-        schedule.pack(side=LEFT)
-        help = Button(self.topButtonFrame, text="help",
-                      fg="white", bg="DeepPink2",
-                      command=lambda: self.master.switch_frame(HelpPage))
-        help.pack(side=RIGHT)
-
-
-
         # task manager
         self.task = StringVar()
         self.date = StringVar()
         self.time = StringVar()
         self.taskFrame = Frame(self, width=300, height=100)
         self.taskFrame.pack(fill=BOTH, expand=TRUE, ipadx=10, pady=20)
-        self.labelTask = Label(self.taskFrame, text='Task')
-        self.labelTask.grid(row=0, column=0)
+        self.taskheading = Label(self.taskFrame,text='Task', font=('Verdana',12, 'bold'), bg="peachpuff", fg="deeppink4")
+        self.taskheading.grid(row=0, column=0, columnspan=3,pady=3)
+        self.labelTask = Label(self.taskFrame, text='Task',font=('calibri',10),fg='black')
+        self.labelTask.grid(row=1, column=0,pady=3)
         self.inputTask = Entry(self.taskFrame,textvariable=self.task)
-        self.inputTask.grid(row=0, column=1)
-        self.labelDate = Label(self.taskFrame, text='Date')
-        self.labelDate.grid(row=1, column=0)
+        self.inputTask.grid(row=1, column=1,pady=3)
+        self.labelDate = Label(self.taskFrame, text='Date',font=('calibri',10),fg='black')
+        self.labelDate.grid(row=2, column=0,pady=3)
         self.inputDate = Entry(self.taskFrame,textvariable=self.date)
-        self.inputDate.grid(row=1, column=1)
-        self.labelTime = Label(self.taskFrame, text='Time')
-        self.labelTime.grid(row=2, column=0)
+        self.inputDate.grid(row=2, column=1,pady=3)
+        self.labelTime = Label(self.taskFrame, text='Time',font=('calibri',10),fg='black')
+        self.labelTime.grid(row=3, column=0,pady=3)
         self.inputTime = Entry(self.taskFrame,textvariable=self.time)
-        self.inputTime.grid(row=2, column=1)
-        self.mikeTask = Button(self.taskFrame, text="Speak", fg="white", bg="DeepPink2",
-                               command=lambda: self.actionSpeakTask())
-        self.mikeTask.grid(row=3, column=0)
-        self.addTask = Button(self.taskFrame, text="Add", fg="white", bg="DeepPink2",
+        self.inputTime.grid(row=3, column=1,pady=3)
+        self.mikeTask = PhotoImage(file='images\mike5.png')
+        self.speakicon= self.mikeTask.subsample(20, 9)
+        self.s = Button(self.taskFrame,image=self.speakicon, compound=LEFT,
+                   command=lambda: self.actionSpeakTask())
+        self.s.image = self.speakicon
+        self.s.grid(row=1, column=2, rowspan=4,padx=5,ipadx=3)
+
+        self.addTask = Button(self.taskFrame, text="Add",  fg="peachpuff", bg="hotpink4",font=('Verdana',11),
                               command=lambda: self.actionAddTask())
-        self.addTask.grid(row=3, column=1)
+        self.addTask.grid(row=6, column=0,columnspan=2)
 
         # todomanager
         self.todoFrame = Frame(self, width=300, height=100)
         self.todoFrame.pack(fill=BOTH, expand=TRUE, ipadx=10, pady=20)
-        self.labelTodo = Label(self.todoFrame, text='Todo')
-        self.labelTodo.grid(row=0, column=0)
+        self.todoheading = Label(self.todoFrame, text='ToDo', font=('Verdana', 12, 'bold'), bg="peachpuff",
+                                 fg="deeppink4")
+        self.todoheading.grid(row=0, column=0, columnspan=3,pady=3)
+        self.labelTodo = Label(self.todoFrame, text='Todo',font=('calibri', 10), fg='black')
+        self.labelTodo.grid(row=1, column=0,pady=3)
         self.inputTodo = Entry(self.todoFrame)
-        self.inputTodo.grid(row=0, column=1)
-        self.mikeTodo = Button(self.todoFrame, text="Speak", fg="white", bg="DeepPink2",
-                               command=lambda: self.actionSpeakTodo())
-        self.mikeTodo.grid(row=1, column=0)
-        self.addTodo = Button(self.todoFrame, text="Add", fg="white", bg="DeepPink2",
+        self.inputTodo.grid(row=1, column=1,pady=3)
+        self.mikeTodo= PhotoImage(file='images\mike5.png')
+        self.speakicon = self.mikeTodo.subsample(25,20)
+        self.s = Button(self.todoFrame, image=self.speakicon, compound=LEFT,
+                        command=lambda: self.actionSpeakTask())
+        self.s.image = self.speakicon
+        self.s.grid(row=1, column=2, padx=5, ipadx=3)
+
+        self.addTodo = Button(self.todoFrame, text="Add", fg="peachpuff", bg="hotpink4",font=('Verdana',11),
                               command=lambda: self.actionAddTodo())
-        self.addTodo.grid(row=1, column=1)
+        self.addTodo.grid(row=3, column=0,columnspan=2)
 
         # note manager
         self.noteFrame = Frame(self, width=300, height=100)
         self.noteFrame.pack(fill=BOTH, expand=TRUE, ipadx=10, pady=20)
-        self.labelNote = Label(self.noteFrame, text='Note')
-        self.labelNote.grid(row=0, column=0)
-        self.inputNote = Entry(self.noteFrame)
-        self.inputNote.grid(row=0, column=1)
-        self.mikeNote = Button(self.noteFrame, text="Speak", fg="white", bg="DeepPink2",
-                               command=lambda: self.actionSpeakNote())
-        self.mikeNote.grid(row=1, column=0)
-        self.addNote = Button(self.noteFrame, text="Add", fg="white", bg="DeepPink2",
+        self.noteheading = Label(self.noteFrame, text='Note', font=('Verdana', 12, 'bold'), bg="peachpuff",
+                                 fg="deeppink4")
+        self.noteheading.grid(row=0, column=0, columnspan=3,pady=3)
+        self.labelTitle = Label(self.noteFrame, text='Title', font=('calibri', 10), fg='black')
+        self.labelTitle.grid(row=1, column=0,pady=3)
+        self.inputTitle = Entry(self.noteFrame, textvariable=self.task)
+        self.inputTitle.grid(row=1, column=1,pady=3)
+        self.mikeNote = PhotoImage(file='images\mike5.png')
+        self.speakicon = self.mikeNote.subsample(25, 11)
+        self.s = Button(self.noteFrame, image=self.speakicon, compound=LEFT,
+                        command=lambda: self.actionSpeakTask())
+        self.s.image = self.speakicon
+        self.s.grid(row=1, column=2, padx=5, ipadx=3)
+        self.labelNote = Label(self.noteFrame, text='Note',font=('calibri', 10), fg='black')
+        self.labelNote.grid(row=2, column=0,pady=3)
+        self.inputNote =Text(self.noteFrame,height=5,width=20)
+        self.inputNote.grid(row=2, column=1,pady=3)
+        self.mikeNote = PhotoImage(file='images\mike5.png')
+        self.speakicon = self.mikeNote.subsample(25, 11)
+        self.s = Button(self.noteFrame, image=self.speakicon, compound=LEFT,
+                        command=lambda: self.actionSpeakTask())
+        self.s.image = self.speakicon
+        self.s.grid(row=2, column=2, padx=5, ipadx=3)
+
+        self.addNote = Button(self.noteFrame, text="Add",  fg="peachpuff", bg="hotpink4",font=('Verdana',11),
                               command=lambda: self.actionAddNote())
-        self.addNote.grid(row=1, column=1)
+        self.addNote.grid(row=4, column=0,columnspan=2)
+
+        # schedule and help frame in the bottom
+        self.topButtonFrame = Frame(self, width=300, height=300)
+        self.topButtonFrame.pack(fill=BOTH, expand=TRUE, ipadx=10, pady=20)
+        schedule = Button(self.topButtonFrame, text="Schedule",
+                          fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                          command=lambda: self.master.switch_frame(SchedulePage))
+        schedule.pack(pady=5)
+        help = Button(self.topButtonFrame, text="Help",
+                      fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                      command=lambda: self.master.switch_frame(HelpPage))
+        help.pack()
 
     def actionSpeakTask(self):
         assistant_speaks('How can I help you ?')
@@ -151,50 +179,54 @@ class StartPage(Frame):
 class SchedulePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.back = Button(self, text="Back",
-                           fg="white", bg="DeepPink2",
-                           command=lambda: master.switch_frame(StartPage))
-        self.back.grid(row=0, column=0)
         self.displayTaskButton = Button(self, text="Display Tasks",
-                                        fg="white", bg="DeepPink2",
+                                        fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
                                         command=lambda: master.switch_frame(DisplayTaskPage))
-        self.displayTaskButton.grid(row=1, column=0)
+        self.displayTaskButton.grid(row=0, column=0,pady=5)
+        self.displayTodoButton = Button(self, text="Display ToDo",
+                                        fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                                        command=lambda: master.switch_frame(DisplayTaskPage))
+        self.displayTodoButton.grid(row=2, column=0,pady=5)
         self.displayNoteButton = Button(self, text="Display Notes",
-                                        fg="white", bg="DeepPink2",
+                                        fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
                                         command=lambda: master.switch_frame(DisplayNotePage))
-        self.displayNoteButton.grid(row=2, column=0)
+        self.displayNoteButton.grid(row=4, column=0,pady=5)
+        self.back = Button(self, text="Back",
+                           fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                           command=lambda: master.switch_frame(StartPage))
+        self.back.grid(row=6, column=0,pady=5)
 
 
 # Display task page
 class DisplayTaskPage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        backimage = PhotoImage(file="images\\back3.png")
-        backicon = backimage.subsample(10, 10)
-        self.back = Button(self, text="Back",image=backicon,
-                           command=lambda: master.switch_frame(SchedulePage))
-        self.back.image=backicon
-        self.back.grid(row=0, column=0,columnspan=5)
-        self.display = Label(self, text="Display Tasks for which of the following:",font=("Lucida Bright", "10", "bold"))
-        self.display.grid(row=1, column=0,columnspan=5)
-        self.font=("Sans Serif","11")
+        #backimage = PhotoImage(file="images\\back3.png")
+        #backicon = backimage.subsample(10, 10)
+        self.display = Label(self, text="Display Tasks for which of the following:",font=("calibri",12, "bold"))
+        self.display.grid(row=0, column=0,columnspan=5)
+        self.font=("calibri","11")
         self.radiovar = StringVar()
         # Option for specific day, btw two days, upcoming tasks or all task in the db
         self.R1 = Radiobutton(self, text="Specific Day",variable=self.radiovar, value="Specific Day", tristatevalue="x",
                               font=self.font,command=self.displayTask)
-        self.R1.grid(row=2, column=0,columnspan=2)
+        self.R1.grid(row=1, column=0,columnspan=2)
         self.R2 = Radiobutton(self, text="Between two days", variable=self.radiovar, value="Between two days", tristatevalue="x",
                               font=self.font,command=self.displayTask)
-        self.R2.grid(row=2, column=2,columnspan=3)
+        self.R2.grid(row=1, column=2,columnspan=3)
         self.R3 = Radiobutton(self, text="All Upcoming", variable=self.radiovar, value="All Upcoming", tristatevalue="x",
                               font=self.font,command=self.displayTask)
-        self.R3.grid(row=3, column=0,columnspan=2)
+        self.R3.grid(row=2, column=0,columnspan=2)
         self.R4 = Radiobutton(self, text="All", variable=self.radiovar, value="All",tristatevalue="x",
                               font=self.font,command=self.displayTask)
-        self.R4.grid(row=3, column=2,columnspan=3)
+        self.R4.grid(row=2, column=1,columnspan=3)
+        self.back = Button(self, text="Back", fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                           command=lambda: master.switch_frame(SchedulePage))
+        # self.back.image=backicon
+        self.back.grid(row=3, column=0, columnspan=5)
+        self.displayTask = Label(self,font=("Verdana", "12", "bold"))
+        self.displayTask.grid(row=4,column=0,columnspan=5,pady=8)
 
-        self.displayTask = Label(self,font=("Lucida Bright", "12", "bold"))
-        self.displayTask.grid(row=4,column=0,columnspan=5,pady=10)
 
     def displayTask(self):
 
@@ -365,7 +397,7 @@ class DisplayTaskPage(Frame):
             self.inputTime.grid(row=i, column=2, columnspan=2)
             i += 1
             mike = PhotoImage(file='images\mike5.png')
-            mike = mike.subsample(15, 15)
+            mike = mike.subsample(13, 15)
             mikeButton = Button(self, image=mike,
                                 command=lambda: self.speakTask())
             mikeButton.image = mike
@@ -451,7 +483,8 @@ class DisplayNotePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.back = Button(self, text="Back",
-                           fg="white", bg="DeepPink2",
+                           fg="peachpuff", bg="hotpink4",
+                           font=('Verdana', 10, 'bold'),
                            command=lambda: master.switch_frame(SchedulePage))
         self.back.grid(row=0, column=0)
 

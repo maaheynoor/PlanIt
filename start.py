@@ -6,11 +6,10 @@ import datetime
 import playsound
 import pyttsx3
 import re
-import psycopg2     #database
+import psycopg2
 from tkinter import *
-import pyaudio
 
-#import out modules
+
 from startPage import StartPage
 
 class mainApp(Tk):
@@ -34,5 +33,5 @@ if __name__ == "__main__":
     root = mainApp()
     root.title("Task Manager")
     root.geometry("300x375")
-    root.configure(background="SkyBlue4")
+    root.configure(background="gray20")
     root.mainloop()
