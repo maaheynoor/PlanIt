@@ -93,6 +93,9 @@ class StartPage(Frame):
         self.addNote.grid(row=4, column=0,columnspan=2)
 
         # schedule and help frame in the bottom
+        """ master is frame containing contents
+        master.master is canvas
+        master.master.master is frame containing canvas used for switching between pages"""
         self.topButtonFrame = Frame(self, width=300, height=300)
         self.topButtonFrame.grid(row=3,column=0,ipadx=10, pady=20)
         schedule = Button(self.topButtonFrame, text="Schedule",
@@ -345,6 +348,10 @@ class DisplayTaskPage(Frame):
         else:
             assistant_speaks("Please repeat the process. Couldn't identify your audio or date mentioned")
 
+        # update width and height of the canvas self is frame which is binded to canvas.. so self.master is canvas
+        self.master.update()
+        self.master.configure(scrollregion=self.master.bbox("all"))
+
 
     def deleteTask(self,id,row,index):
         try:
@@ -372,6 +379,10 @@ class DisplayTaskPage(Frame):
             if (connection):
                 cursor.close()
                 connection.close()
+
+        # update width and height of the canvas self is frame which is binded to canvas.. so self.master is canvas
+        self.master.update()
+        self.master.configure(scrollregion=self.master.bbox("all"))
 
     def displayEdit(self,id,row,index):
         i=index
@@ -425,6 +436,9 @@ class DisplayTaskPage(Frame):
             if (connection):
                 cursor.close()
                 connection.close()
+        # update width of the canvas self is frame which is binded to canvas.. so self.master is canvas
+        self.master.update()
+        self.master.configure(scrollregion=self.master.bbox("all"))
 
     def speakTask(self):
         assistant_speaks("Is there any change in task?")
@@ -450,6 +464,7 @@ class DisplayTaskPage(Frame):
             text = get_audio()
             time = TimeFromText(text)  # get time from text
             self.time.set(time)
+
 
     def editTask(self,id,row,index):
         try:
@@ -484,6 +499,9 @@ class DisplayTaskPage(Frame):
             if (connection):
                 cursor.close()
                 connection.close()
+        # update width of the canvas self is frame which is binded to canvas.. so self.master is canvas
+        self.master.update()
+        self.master.configure(scrollregion=self.master.bbox("all"))
 
 class DisplayNotePage(Frame):
     def __init__(self, master):

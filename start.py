@@ -28,6 +28,12 @@ class mainApp(Tk):
         vsb.config(command=canvas.yview)
         canvas.config(yscrollcommand=vsb.set)
 
+        hsb = Scrollbar(self.frame_canvas, orient="horizontal", command=canvas.xview)
+        hsb.grid(row=1, column=0, sticky='ew')
+        hsb.config(command=canvas.xview)
+        canvas.config(xscrollcommand=hsb.set)
+
+
         new_frame = frame_class(canvas)
         # Create a frame to contain the buttons
         canvas.create_window((0, 0), window=new_frame, anchor='nw')
@@ -42,6 +48,17 @@ class mainApp(Tk):
             self._frame.destroy()
         self._frame = new_frame
         #self._frame.pack()
+
+    def update(self):
+        self.master.create_window(0, 0, anchor=NW, window=self)
+        self.update_idletasks()
+        self.master.config(scrollregion=self.master.bbox("all"))
+        if self.winfo_reqwidth() != self.master.winfo_width():
+            # update the canvas's width to fit the inner frame
+            self.master.config(width = self.winfo_reqwidth())
+        if self.winfo_reqheight() != self.master.winfo_height():
+            # update the canvas's width to fit the inner frame
+            self.master.config(height = self.winfo_reqheight())
 
 
 
