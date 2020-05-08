@@ -66,6 +66,7 @@ class StartPage(Frame):
         self.addTodo.grid(row=3, column=0,columnspan=2)
 
         # note manager
+        self.title = StringVar()
         self.noteFrame = Frame(self, width=300, height=100)
         self.noteFrame.grid(row=2,column=0,ipadx=10, pady=20, sticky='news')
         self.noteheading = Label(self.noteFrame, text='Note', font=('Verdana', 12, 'bold'), bg="peachpuff",
@@ -73,7 +74,7 @@ class StartPage(Frame):
         self.noteheading.grid(row=0, column=0, columnspan=3,pady=3)
         self.labelTitle = Label(self.noteFrame, text='Title', font=('calibri', 10), fg='black')
         self.labelTitle.grid(row=1, column=0,pady=3)
-        self.inputTitle = Entry(self.noteFrame, textvariable=self.task)
+        self.inputTitle = Entry(self.noteFrame, textvariable=self.title)
         self.inputTitle.grid(row=1, column=1,pady=3)
         self.s = Button(self.noteFrame, image=self.speakicon, compound=LEFT,
                         command=lambda: self.actionSpeakNoteTitle())
@@ -166,23 +167,48 @@ class StartPage(Frame):
         pass
 
     def actionSpeakNoteTitle(self):
-        assistant_speaks('How can I help you ?')
         self.inputTitle.delete(0, END)
-        voice = get_audio()
-        voice = voice.lower()
-        print(voice)
+        assistant_speaks("Please specify the title of note")
+        text = get_audio()
+        self.title.set(text)
+        print(text)
 
     def actionSpeakNote(self):
-        assistant_speaks('How can I help you ?')
+        #self.inputNote.delete(0, END)
+        assistant_speaks('Please specify the note to be added')
         voice = get_audio()
-        voice = voice.lower()
-        print(voice)
+        self.inputNote.insert(END,voice)
+        print(self.inputNote.get("1.0",END))
 
     def actionAddNote(self):
-
-        self.inputTitle.delete(0, END)
-        self.inputNote.delete(0, END)
-
+        try:
+            connection = psycopg2.connect(user="usertm",
+                                          password="password",
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="TaskManager")
+            cursor = connection.cursor()
+            title = self.inputTitle.get()
+            print(title)
+            note = self.inputNote.get("1.0",END)
+            print(note)
+            now = datetime.datetime.now()
+            date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+            print(date_time)
+            str = "INSERT INTO note(note,title,date_created) VALUES ('" + note + "','" + title + "','" + date_time + "');"
+            cursor.execute(str)
+            connection.commit()
+            assistant_speaks("Note added successfully")
+            self.inputTitle.delete(0, END)
+            self.inputNote.delete(1.0, END)
+        except (Exception, psycopg2.DatabaseError) as error:
+            connection.rollback()
+            print("Error while using PostgreSQL table", error)
+        finally:
+            # closing database connection.
+            if (connection):
+                cursor.close()
+                connection.close()
 
 
 class SchedulePage(Frame):
