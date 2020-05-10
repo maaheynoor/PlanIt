@@ -529,14 +529,104 @@ class DisplayTaskPage(Frame):
         self.master.update()
         self.master.configure(scrollregion=self.master.bbox("all"))
 
+# Display note page
 class DisplayNotePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.back = Button(self, text="Back",
-                           fg="peachpuff", bg="hotpink4",
-                           font=('Verdana', 10, 'bold'),
-                           command=lambda: master.switch_frame(SchedulePage))
-        self.back.grid(row=0, column=0)
+        self.display = Label(self, text="Titles of the notes are:",font=("calibri",12, "bold"))
+        self.display.grid(row=0, column=0,columnspan=5)
+        self.font=("calibri","11")
+        self.radiovar = StringVar()
+        # self.radiovar.set(None)
+        try:
+            connection = psycopg2.connect(user="usertm",
+                                          password="password",
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="TaskManager")
+            cursor = connection.cursor()
+            query= "SELECT title from note"
+            cursor.execute(query)
+            data=cursor.fetchall()
+            i=1
+            for title in data:
+                title_1 =Radiobutton(self, text=title, font=self.font, padx=5, pady=5,variable=self.radiovar,tristatevalue='x',value=title,command=lambda :self.displayNote()).grid(row=i, column=0)
+                i=i+1
+            connection.commit()
+        except (Exception , psycopg2.DatabaseError) as error:
+            connection.rollback()
+            print("Error while using PostgreSQL table", error)
+        finally:
+        # closing database connection.
+            if (connection):
+                cursor.close()
+                connection.close()
+
+        # self.back.image=backicon
+        self.back = Button(self, text="Back", fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                           command=lambda: master.master.master.switch_frame(SchedulePage))
+        self.back.grid(row=3, column=0, columnspan=5)
+        #self.displayNote = Label(self,font=("Verdana", "12", "bold"))
+        #self.displayNote.grid(row=4,column=0,columnspan=5,pady=8)
+
+    def displayNote(self):
+        try:
+            title = self.radiovar.get()
+            #print(title)
+            connection = psycopg2.connect(user="usertm",
+                                          password="password",
+                                            host="127.0.0.1",
+                                              port="5432",
+                                              database="TaskManager")
+            cursor = connection.cursor()
+            query = "SELECT * FROM note WHERE title='"+title+"';"
+            cursor.execute(query)
+            notes=cursor.fetchall()
+             # the data from db is display in grid with row>=5
+            # First erase previous data
+            for label in self.grid_slaves():
+                if int(label.grid_info()["row"]) >= 5:
+                    label.grid_forget()
+            index=5
+            if len(notes)>0:
+                stringnote="Note-Id\t\tTitle\t\tNote\t\tDate and Time Created\n"
+                Label(self, text="Title",font=("Artefact","12","bold")).grid(row=index, column=0)
+                Label(self, text="Note",font=("Artefact","12","bold")).grid(row=index, column=1)
+                Label(self, text="Date and Time created",font=("Artefact","12","bold")).grid(row=index, column=2)
+
+                dimage= PhotoImage(file='images\delete.png')
+                deleteicon = dimage.subsample(10, 10)
+                eimage= PhotoImage(file='images\edit.png')
+                editicon = eimage.subsample(10, 10)
+              # each note is displayed in a row and a delete button is associated with it
+                for note in notes:
+                    index = index + 1
+                    Label(self, text=note[1],font=self.font,padx=5,pady=5).grid(row=index, column=1)
+                    Label(self, text=str(note[2]),font=self.font,padx=5,pady=5).grid(row=index, column=0)
+                    Label(self, text=str(note[3]),font=self.font,padx=5,pady=5).grid(row=index , column=2)
+                    d=Button(self,text="Delete",image=deleteicon,
+                             command=lambda id=note[0],row=index: self.deleteTask(id,row,index+1))
+                    d.image = deleteicon
+                    d.grid(row=index, column=3)
+                    e = Button(self, text="Edit", image=editicon,
+                                command=lambda id=note[0], row=index: self.displayEdit(id,row,index+1))
+                    e.image = editicon
+                    e.grid(row=index, column=4)
+                    stringnote +=str(note[0])+"\t\t"+note[1]+"\t\t"+str(note[2])+"\t\t"+str(note[3])+"\n"
+                #print(stringnote)
+                assistant_speaks("The Note is displayed")
+            connection.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            connection.rollback()
+            print("Error while using PostgreSQL table", error)
+        finally:
+           # closing database connection.
+            if (connection):
+                cursor.close()
+                connection.close()
+        # update width and height of the canvas self is frame which is binded to canvas.. so self.master is canvas
+        self.master.update()
+        self.master.configure(scrollregion=self.master.bbox("all"))
 
 
 class HelpPage(Frame):
