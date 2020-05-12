@@ -424,19 +424,19 @@ class DisplayTaskPage(Frame):
             task = cursor.fetchone()
             Label(self, text="").grid(row=i, column=0, columnspan=5)
             i+=1
-            ntask = StringVar(value=task[1])
-            ndate = StringVar(value=task[2])
-            ntime = StringVar(value=task[3])
+            self.ntask = StringVar(value=task[1])
+            self.ndate = StringVar(value=task[2])
+            self.ntime = StringVar(value=task[3])
             Label(self, text="Task:",font=("Lucida Bright", "10", "bold")).grid(row=i, column=0,columnspan=2)
-            self.inputTask=Entry(self,textvariable=ntask)
+            self.inputTask=Entry(self,textvariable=self.ntask)
             self.inputTask.grid(row=i,column=2,columnspan=2)
             i+=1
             Label(self, text="Date:",font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
-            self.inputDate=Entry(self, textvariable=ndate)
+            self.inputDate=Entry(self, textvariable=self.ndate)
             self.inputDate.grid(row=i, column=2, columnspan=2)
             i += 1
             Label(self, text="Time:",font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
-            self.inputTime=Entry(self, textvariable=ntime)
+            self.inputTime=Entry(self, textvariable=self.ntime)
             self.inputTime.grid(row=i, column=2, columnspan=2)
             i += 1
             mike = PhotoImage(file='images\mike5.png')
@@ -473,7 +473,7 @@ class DisplayTaskPage(Frame):
         if text.count("yes")>0:
             assistant_speaks("Please specify the task")
             text = get_audio()
-            self.task.set(text)
+            self.ntask.set(text)
         assistant_speaks("Is there any change in date?")
         text = get_audio()
         text = text.lower()
@@ -481,7 +481,7 @@ class DisplayTaskPage(Frame):
             assistant_speaks("Please specify the day")
             text = get_audio()
             tdate = DateFromText(text)  # get time from date
-            self.date.set(tdate)
+            self.ndate.set(tdate)
         assistant_speaks("Is there any change in time?")
         text = get_audio()
         text = text.lower()
@@ -489,7 +489,7 @@ class DisplayTaskPage(Frame):
             assistant_speaks("Please specify the time")
             text = get_audio()
             time = TimeFromText(text)  # get time from text
-            self.time.set(time)
+            self.ntime.set(time)
 
 
     def editTask(self,id,row,index):
@@ -575,7 +575,7 @@ class DisplayNotePage(Frame):
 
             for title in data:
 
-                title_1 =Radiobutton(self, text=title, font=self.font, padx=5, pady=5,variable=self.radiovar,tristatevalue='x',value=title,command=lambda :self.displayNote()).grid(row=i, column=0)
+                Radiobutton(self, text=title[0], font=self.font, padx=5, pady=5,variable=self.radiovar,tristatevalue='x',value=title[0],command=lambda row=i:self.displayNote(row,i+1)).grid(row=i, column=0)
 
                 i=i+1
 
@@ -609,7 +609,8 @@ class DisplayNotePage(Frame):
 
 
 
-    def displayNote(self):
+    def displayNote(self,row,index):
+        note_index=index
         try:
 
             title = self.radiovar.get()
@@ -640,11 +641,10 @@ class DisplayNotePage(Frame):
 
             for label in self.grid_slaves():
 
-                if int(label.grid_info()["row"]) >= 5:
+                if int(label.grid_info()["row"]) >= note_index:
 
                     label.grid_forget()
 
-            index=6
 
             if len(notes)>0:
 
@@ -680,7 +680,7 @@ class DisplayNotePage(Frame):
 
                     d=Button(self,text="Delete",image=deleteicon,
 
-                             command=lambda id=note[0],row=index: self.deleteNote(id,row,index+1))
+                             command=lambda id=note[0]: self.deleteNote(id,row,note_index))
 
                     d.image = deleteicon
 
@@ -688,7 +688,7 @@ class DisplayNotePage(Frame):
 
                     e = Button(self, text="Edit", image=editicon,
 
-                                command=lambda id=note[0], row=index: self.displayEdit(id,row,index+1))
+                                command=lambda id=note[0]: self.displayEdit(id,row,note_index))
 
                     e.image = editicon
 
@@ -754,6 +754,8 @@ class DisplayNotePage(Frame):
         # update width and height of the canvas self is frame which is binded to canvas.. so self.master is canvas
         self.master.update()
         self.master.configure(scrollregion=self.master.bbox("all"))
+
+
 
 
 class HelpPage(Frame):
