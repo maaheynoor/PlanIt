@@ -22,7 +22,7 @@ class mainApp(Tk):
         canvas = Canvas(self.frame_canvas)
         canvas.grid(row=0, column=0, sticky="news")
 
-        # Link a scrollbar to the canvas
+        """# Link a scrollbar to the canvas
         vsb = Scrollbar(self.frame_canvas, orient="vertical", command=canvas.yview)
         vsb.grid(row=0, column=1, sticky='ns')
         vsb.config(command=canvas.yview)
@@ -31,7 +31,7 @@ class mainApp(Tk):
         hsb = Scrollbar(self.frame_canvas, orient="horizontal", command=canvas.xview)
         hsb.grid(row=1, column=0, sticky='ew')
         hsb.config(command=canvas.xview)
-        canvas.config(xscrollcommand=hsb.set)
+        canvas.config(xscrollcommand=hsb.set)"""
 
 
         new_frame = frame_class(canvas)
@@ -64,8 +64,9 @@ class mainApp(Tk):
 
 if __name__ == "__main__":
     root = mainApp()
-    root.title("PlanIt")
-    root.geometry("300x375")
+    root.title("Task Manager")
+    root.geometry("475x550")
+    root.resizable(0, 0)
     root.configure(background="gray20")
     root.grid_rowconfigure(0, weight=1)
     root.columnconfigure(0, weight=1)
