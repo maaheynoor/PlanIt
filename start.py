@@ -64,7 +64,7 @@ class mainApp(Tk):
 
 if __name__ == "__main__":
     root = mainApp()
-    root.title("Task Manager")
+    root.title("PlanIt")
     root.geometry("475x550")
     root.resizable(0, 0)
     root.configure(background="gray20")
