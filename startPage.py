@@ -614,8 +614,8 @@ class DisplayNotePage(Frame):
                 # Label(self, text=title,font=("Artefact","12","bold")).grid(row=index, column=0)
                 # Label(self,font=("Artefact","12","bold")).grid(row=index+1, column=0)
                 #Label(self, text="Date and Time created",font=("Artefact","12","bold")).grid(row=index, column=2)
-            dimage= PhotoImage(file='images\delete.png')
-            deleteicon = dimage.subsample(10, 10)
+            dimage= PhotoImage(file='images\delete_1.png')
+            deleteicon = dimage.subsample(20, 20)
             eimage= PhotoImage(file='images\edit_1.png')
             editicon = eimage.subsample(20, 20)
             d=Button(self,text="Delete",image=deleteicon, command=lambda id=notes[0]: self.deleteNote(id,row,note_index))
@@ -727,7 +727,6 @@ class DisplayNotePage(Frame):
 class HelpPage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.back = Button(self, text="Back",
-                           fg="white", bg="DeepPink2",
-                           command=lambda: master.switch_frame(SchedulePage))
-        self.back.grid(row=0, column=0)
+        self.back = Button(self, text="Back", fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                           command=lambda: master.master.master.switch_frame(SchedulePage))
+        self.back.grid(row=0, column=0, columnspan=5)
