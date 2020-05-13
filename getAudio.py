@@ -26,4 +26,3 @@ def get_audio():
     except:
 
         assistant_speaks("Could not understand your audio, PLease try again !")
-        return ""
