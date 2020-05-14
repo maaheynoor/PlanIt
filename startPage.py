@@ -120,20 +120,20 @@ class StartPage(Frame):
 
     def actionSpeakTask(self):
         assistant_speaks('How can I help you ?')
-        self.inputTask.delete(0, END)
-        self.inputDate.delete(0, END)
-        self.inputTime.delete(0, END)
         assistant_speaks("Please specify the task to be performed")
         text = get_audio()
-        self.task.set(text)
+        if text is not None:
+            self.task.set(text)
         assistant_speaks("Please specify the day")
         text = get_audio()
         tdate = DateFromText(text)  # get time from date
-        self.date.set(tdate)
+        if tdate is not None:
+            self.date.set(tdate)
         assistant_speaks("Please mention the time")
         text = get_audio()
         time = TimeFromText(text)  # get time from text
-        self.time.set(time)
+        if time is not None:
+            self.time.set(time)
 
     def actionAddTask(self):
         try:
@@ -149,13 +149,23 @@ class StartPage(Frame):
             print(date)
             time = self.inputTime.get()
             print(time)
-            str = "INSERT INTO task(task,date,time) VALUES ('" + task + "','" + date + "','" + time + "');"
-            cursor.execute(str)
-            connection.commit()
-            assistant_speaks("Task added successfully")
-            self.inputTask.delete(0, END)
-            self.inputDate.delete(0, END)
-            self.inputTime.delete(0, END)
+            if len(task)!=0 and len(date)!=0:
+                if len(time)!=0:
+                    str = "INSERT INTO task(task,date,time) VALUES ('" + task + "','" + date + "','" + time + "');"
+
+                else:
+                    str = "INSERT INTO task(task,date) VALUES ('" + task + "','" + date + "');"
+                cursor.execute(str)
+                connection.commit()
+                assistant_speaks("Task added successfully")
+                self.inputTask.delete(0, END)
+                self.inputDate.delete(0, END)
+                self.inputTime.delete(0, END)
+            elif len(task)==0:
+                assistant_speaks("Please enter task")
+            elif len(date)==0:
+                assistant_speaks("Please enter date")
+
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
@@ -308,10 +318,13 @@ class StartPage(Frame):
             now = datetime.datetime.now()
             date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
             print(date_time)
-            str = "INSERT INTO note(note,title,date_created) VALUES ('" + note + "','" + title + "','" + date_time + "');"
-            cursor.execute(str)
-            connection.commit()
-            assistant_speaks("Note added successfully")
+            if len(self.inputNote.get("1.0","end-1c"))!=0:
+                str = "INSERT INTO note(note,title,date_created,date_modified) VALUES ('" + note + "','" + title + "','" + date_time + "','" + date_time + "');"
+                cursor.execute(str)
+                connection.commit()
+                assistant_speaks("Note added successfully")
+            else:
+                assistant_speaks("Note cannot be empty")
             self.inputTitle.delete(0, END)
             self.inputNote.delete(1.0, END)
         except (Exception, psycopg2.DatabaseError) as error:
@@ -392,9 +405,10 @@ class SchedulePage(Frame):
         #                  command=lambda: master.master.master.switch_frame(SchedulePage))
         # self.back.image=backicon
         self.displayTaskLabel = Label(self.scrollFrame.viewPort, font=("Verdana", "12", "bold"))
-        self.ntask = None
-        self.ndate = None
-        self.ntime = None
+        # self.ntask = None
+        # self.ndate = None
+        # self.ntime = None
+
 
     def displayTaskAction(self):
         widget_list = all_children(self.scrollFrame)
@@ -406,10 +420,10 @@ class SchedulePage(Frame):
         self.displayTodoButton['bg'] = 'hotpink4'
         self.displayNoteButton['bg'] = 'hotpink4'
         self.display.grid(row=0, column=0, columnspan=5)
-        self.R1.grid(row=1, column=0, columnspan=2)
-        self.R2.grid(row=1, column=2, columnspan=3)
-        self.R3.grid(row=2, column=0, columnspan=2)
-        self.R4.grid(row=2, column=1, columnspan=3)
+        self.R1.grid(row=1, column=0, columnspan=2,sticky=W)
+        self.R2.grid(row=1, column=2, columnspan=3,sticky=W)
+        self.R3.grid(row=2, column=0, columnspan=2,sticky=W)
+        self.R4.grid(row=2, column=2, columnspan=3,sticky=W)
         #self.back.grid(row=3, column=0, columnspan=5)
         self.displayTaskLabel.grid(row=4, column=0, columnspan=5, pady=8)
 
@@ -435,6 +449,9 @@ class SchedulePage(Frame):
             edate = DateFromText(edate)
             if sdate == None or edate == None:
                 input = False
+            elif sdate>edate:
+                input =False
+                assistant_speaks("Start date cannot be greater than end date")
             else:
                 input = True
         # No speech input for all upcoming or all tasks
@@ -466,14 +483,16 @@ class SchedulePage(Frame):
                     query = "SELECT * FROM task WHERE date>='" + sdate + "' AND date<='" + edate + "' ORDER BY date,time;"
                     selection = " Between " + sdate + " and " + edate
                 elif selection == "All Upcoming":
-                    today = today.strftime("%Y-%m-%d")
+                    now = datetime.datetime.now()
+                    today = now.strftime("%Y-%m-%d")
+                    time_now = now.strftime("%H:%M:%S")
                     query = "SELECT * FROM task WHERE date>='" + today + "' ORDER BY date,time;"
                     selection = "All Upcoming Tasks"
                 elif selection == "All":
                     query = "SELECT * FROM task ORDER BY date,time;"
                     selection = "All Tasks"
-                cursor.execute(query)
                 self.displayTaskLabel.config(text=selection)
+                cursor.execute(query)
                 tasks = cursor.fetchall()
                 # the data from db is display in grid with row>=5
                 # First erase previous data
@@ -494,9 +513,9 @@ class SchedulePage(Frame):
                     # each task is displayed in a row and a delete button is associated with it
                     for task in tasks:
                         index = index + 1
-                        Label(self.scrollFrame.viewPort, text=task[1], font=self.font, padx=5, pady=5).grid(row=index, column=0)
-                        Label(self.scrollFrame.viewPort, text=str(task[2]), font=self.font, padx=5, pady=5).grid(row=index, column=1)
-                        Label(self.scrollFrame.viewPort, text=str(task[3]), font=self.font, padx=5, pady=5).grid(row=index, column=2)
+                        Label(self.scrollFrame.viewPort, text=task[1], font=self.font, padx=5, pady=5).grid(row=index, column=0,sticky=W)
+                        Label(self.scrollFrame.viewPort, text=str(task[2]), font=self.font, padx=5, pady=5).grid(row=index, column=1,sticky=W)
+                        Label(self.scrollFrame.viewPort, text=str(task[3]), font=self.font, padx=5, pady=5).grid(row=index, column=2,sticky=W)
                         d = Button(self.scrollFrame.viewPort, text="Delete", image=deleteicon,
                                    command=lambda id=task[0], row=index: self.deleteTask(id, row, index + 1))
                         d.image = deleteicon
@@ -522,7 +541,11 @@ class SchedulePage(Frame):
                     connection.close()
         # If no day is recognized or speech is not identified then user can try again
         else:
+            self.displayTaskLabel.config(text="")
             assistant_speaks("Please repeat the process. Couldn't identify your audio or date mentioned")
+            for label in self.scrollFrame.viewPort.grid_slaves():
+                if int(label.grid_info()["row"]) >= 5:
+                    label.grid_forget()
 
         # update width and height of the canvas self is frame which is binded to canvas.. so self.master is canvas
         self.master.update()
@@ -590,7 +613,7 @@ class SchedulePage(Frame):
             self.inputTime.grid(row=i, column=2, columnspan=2)
             i += 1
             mike = PhotoImage(file='images\mike5.png')
-            mike = mike.subsample(13, 15)
+            mike = mike.subsample(25, 20)
             mikeButton = Button(self.scrollFrame.viewPort, image=mike,
                                 command=lambda: self.speakTask())
             mikeButton.image = mike
@@ -619,27 +642,33 @@ class SchedulePage(Frame):
     def speakTask(self):
         assistant_speaks("Is there any change in task?")
         text = get_audio()
-        text = text.lower()
-        if text.count("yes") > 0:
-            assistant_speaks("Please specify the task")
-            text = get_audio()
-            self.ntask.set(text)
+        if text is not None:
+            text = text.lower()
+            if text.count("yes") > 0:
+                assistant_speaks("Please specify the task")
+                text = get_audio()
+                if text is not None:
+                    self.ntask.set(text)
         assistant_speaks("Is there any change in date?")
         text = get_audio()
-        text = text.lower()
-        if text.count() > 0:
-            assistant_speaks("Please specify the day")
-            text = get_audio()
-            tdate = DateFromText(text)  # get time from date
-            self.ndate.set(tdate)
+        if text is not None:
+            text = text.lower()
+            if text.count("yes") > 0:
+                assistant_speaks("Please specify the day")
+                text = get_audio()
+                tdate = DateFromText(text)  # get date from text
+                if tdate is not None:
+                    self.ndate.set(tdate)
         assistant_speaks("Is there any change in time?")
         text = get_audio()
-        text = text.lower()
-        if text.count("yes") > 0:
-            assistant_speaks("Please specify the time")
-            text = get_audio()
-            time = TimeFromText(text)  # get time from text
-            self.ntime.set(time)
+        if text is not None:
+            text = text.lower()
+            if text.count("yes") > 0:
+                assistant_speaks("Please specify the time")
+                text = get_audio()
+                time = TimeFromText(text)  # get time from text
+                if time is not None:
+                    self.ntime.set(time)
 
     def editTask(self, id, row, index):
         try:
@@ -656,17 +685,29 @@ class SchedulePage(Frame):
             print(date)
             time = self.inputTime.get()
             print(time)
-            query = "UPDATE task SET task='" + task + "',date='" + date + "',time='" + time + "' WHERE task_id=" + str(
-                id) + ";"
-            cursor.execute(query)
-            for gridrow in self.scrollFrame.viewPort.grid_slaves():
-                if int(gridrow.grid_info()["row"]) >= index:
-                    gridrow.grid_forget()
-            Label(self.scrollFrame.viewPort, text=task).grid(row=row, column=0)
-            Label(self.scrollFrame.viewPort, text=date).grid(row=row, column=1)
-            Label(self.scrollFrame.viewPort, text=time).grid(row=row, column=2)
-            assistant_speaks("Task edited successfully")
-            connection.commit()
+            if len(task)!=0 and len(date)!=0:
+                if len(time)!=0:
+                    query = "UPDATE task SET task='" + task + "',date='" + date + "',time='" + time + "' WHERE task_id=" + str(
+                    id) + ";"
+                else:
+                    query = "UPDATE task SET task='" + task + "',date='" + date + "',time=NULL WHERE task_id=" + str(
+                        id) + ";"
+                cursor.execute(query)
+                for gridrow in self.scrollFrame.viewPort.grid_slaves():
+                    if int(gridrow.grid_info()["row"]) >= index:
+                        gridrow.grid_forget()
+                for label in self.scrollFrame.viewPort.grid_slaves():
+                    if int(label.grid_info()["row"])==row and int(label.grid_info()["column"])<=2:
+                        label.grid_forget()
+                Label(self.scrollFrame.viewPort,font=self.font, text=task).grid(row=row, column=0)
+                Label(self.scrollFrame.viewPort, font=self.font,text=date).grid(row=row, column=1)
+                Label(self.scrollFrame.viewPort,font=self.font, text=time).grid(row=row, column=2)
+                assistant_speaks("Task edited successfully")
+                connection.commit()
+            elif len(task)==0:
+                assistant_speaks("Please enter task")
+            elif len(date)==0:
+                assistant_speaks("Please enter date")
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
@@ -828,7 +869,9 @@ class SchedulePage(Frame):
         self.printData()
 
     def initNote(self):
-        self.display = Label(self.scrollFrame.viewPort, text="Titles of the notes are:", font=("calibri", 12, "bold"))
+        self.display = Label(self.scrollFrame.viewPort, text="Notes created", font=("calibri", 12, "bold"))
+        self.display1 = Label(self.scrollFrame.viewPort, text="Date created", font=("calibri", 12, "bold"))
+        self.display2 = Label(self.scrollFrame.viewPort, text="Last modified", font=("calibri", 12, "bold"))
         self.font = ("calibri", "11")
         self.radiovar = StringVar()
 
@@ -836,10 +879,13 @@ class SchedulePage(Frame):
         widget_list = all_children(self.scrollFrame)
         for item in widget_list:
             item.grid_forget()
+        self.initNote()
         self.displayTaskButton['bg'] = 'hotpink4'
         self.displayTodoButton['bg'] = 'hotpink4'
         self.displayNoteButton['bg'] = 'pink'
-        self.display.grid(row=1, column=0, columnspan=5)
+        self.display.grid(row=1, column=0)
+        self.display1.grid(row=1, column=1)
+        self.display2.grid(row=1, column=2)
         self.displayNoteInFrame()
 
     def displayNoteInFrame(self):
@@ -850,14 +896,16 @@ class SchedulePage(Frame):
                                           port="5432",
                                           database="TaskManager")
             cursor = connection.cursor()
-            query = "SELECT note_id, title from note ORDER BY date_created;"
+            query = "SELECT note_id, title,date_created,date_modified from note ORDER BY date_modified DESC;"
             cursor.execute(query)
             data = cursor.fetchall()
             i = 2
             for title in data:
                 Radiobutton(self.scrollFrame.viewPort, text=title[1], font=self.font, padx=5, pady=5, variable=self.radiovar,
                             tristatevalue='x', value=title[0],
-                            command=lambda row=i: self.displayNote(row, i + 1)).grid(row=i, column=0)
+                            command=lambda row=i: self.displayNote(row, i + 1)).grid(row=i, column=0,sticky=W)
+                Label(self.scrollFrame.viewPort, text=title[2].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5).grid(row=i, column=1,sticky=W)
+                Label(self.scrollFrame.viewPort, text=title[3].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5).grid(row=i, column=2, sticky=W)
                 i = i + 1
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -879,7 +927,7 @@ class SchedulePage(Frame):
                                               port="5432",
                                               database="TaskManager")
             cursor = connection.cursor()
-            query = "SELECT * FROM note WHERE note_id='"+note_id+"' ORDER BY date_created;"
+            query = "SELECT * FROM note WHERE note_id='"+note_id+"' ORDER BY date_modified DESC;"
             cursor.execute(query)
             notes=cursor.fetchone()
              # the data from db is display in grid with row>=5
@@ -980,19 +1028,19 @@ class SchedulePage(Frame):
             cursor = connection.cursor()
             title= self.inputTitle.get()
             note = self.inputNote.get("1.0",END)
-            query = "UPDATE note SET title='" + title + "',note='" + note +"' WHERE note_id="+str(id)+";"
-            cursor.execute(query)
-            for gridrow in self.scrollFrame.viewPort.grid_slaves():
-                if int(gridrow.grid_info()["row"])>=index:
-                    gridrow.grid_forget()
-            for label in self.scrollFrame.viewPort.grid_slaves():
-                if int(label.grid_info()["row"])==row:
-                    label.grid_forget()
-            Radiobutton(self.scrollFrame.viewPort, text=title, font=self.font, padx=5, pady=5, variable=self.radiovar, tristatevalue='x',
-                        value=str(id), command=lambda row=row: self.displayNote(row, index)).grid(row=row, column=0)
-
-            assistant_speaks("Note edited successfully")
-            connection.commit()
+            print(len(self.inputNote.get("1.0","end-1c")))
+            if len(self.inputNote.get("1.0","end-1c"))!=0:
+                now = datetime.datetime.now()
+                date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+                print(date_time)
+                query = "UPDATE note SET title='" + title + "',note='" + note +"',date_modified='"+date_time+"' WHERE note_id="+str(id)+";"
+                cursor.execute(query)
+                assistant_speaks("Note edited successfully")
+                connection.commit()
+                self.initNote()
+                self.displayNoteAction()
+            else:
+                assistant_speaks("Note cannot be empty")
         except (Exception , psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
