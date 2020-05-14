@@ -14,4 +14,6 @@ DateTime,
 PyAudio,
 SpeechRecognition,
 gTTS,
-pyttsx3
+pyttsx3,
+tkinter,
+psycopg2
