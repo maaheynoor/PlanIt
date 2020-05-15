@@ -22,8 +22,8 @@ class mainApp(Tk):
         canvas = Canvas(self.frame_canvas)
         canvas.grid(row=0, column=0, sticky="news")
 
-        """# Link a scrollbar to the canvas
-        vsb = Scrollbar(self.frame_canvas, orient="vertical", command=canvas.yview)
+        # Link a scrollbar to the canvas
+        """vsb = Scrollbar(self.frame_canvas, orient="vertical", command=canvas.yview)
         vsb.grid(row=0, column=1, sticky='ns')
         vsb.config(command=canvas.yview)
         canvas.config(yscrollcommand=vsb.set)
@@ -65,6 +65,7 @@ class mainApp(Tk):
 if __name__ == "__main__":
     root = mainApp()
     root.title("PlanIt")
+    #root.geometry("300x375")
     root.geometry("475x550")
     root.resizable(0, 0)
     root.configure(background="gray20")
