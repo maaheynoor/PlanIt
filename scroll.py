@@ -11,8 +11,7 @@ class ScrollFrame(tk.Frame):
                                  background="#ffffff")  # place a frame on the canvas, this frame will hold the child widgets
         self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)  # place a scrollbar on self
         self.hsb = tk.Scrollbar(self, orient="horizontal", command=self.canvas.xview)  # place a scrollbar on self
-        self.canvas.configure(yscrollcommand=self.vsb.set)  # attach scrollbar action to scroll of canvas
-        self.canvas.configure(xscrollcommand=self.hsb.set)  # attach scrollbar action to scroll of canvas
+        self.canvas.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set)  # attach scrollbar action to scroll of canvas
 
         self.vsb.pack(side="right", fill="y")  # pack scrollbar to right of self
         self.hsb.pack(side="bottom", fill="x")  # pack scrollbar to right of self
@@ -23,8 +22,8 @@ class ScrollFrame(tk.Frame):
 
         self.viewPort.bind("<Configure>",
                            self.onFrameConfigure)  # bind an event whenever the size of the viewPort frame changes.
-        self.canvas.bind("<Configure>",
-                         self.onCanvasConfigure)  # bind an event whenever the size of the viewPort frame changes.
+        #self.canvas.bind("<Configure>",
+         #                self.onCanvasConfigure)  # bind an event whenever the size of the viewPort frame changes.
 
         self.onFrameConfigure(
             None)  # perform an initial stretch on render, otherwise the scroll region has a tiny border until the first resize
