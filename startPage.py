@@ -117,6 +117,7 @@ class StartPage(Frame):
         self.displayFrame.grid(row=0, column=1, rowspan=4, padx=2, pady=5, sticky='news')
         self.scrollBar = ScrollFrame(self.displayFrame, 190, 425)
         self.scrollBar.pack(side="top", fill="both", expand=True)
+        self.displayTodoInSideFrame()
 
     def actionSpeakTask(self):
         assistant_speaks('How can I help you ?')
