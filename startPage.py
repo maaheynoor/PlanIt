@@ -383,29 +383,29 @@ class SchedulePage(Frame):
 
     def initTask(self):
         self.display = Label(self.scrollFrame.viewPort, text="Display Tasks for which of the following:",
-                             font=("calibri", 12, "bold"))
+                             font=("calibri", 12, "bold"),bg="white")
         self.font = ("calibri", "11")
         self.radiovar = StringVar()
         # Option for specific day, btw two days, upcoming tasks or all task in the db
         self.R1 = Radiobutton(self.scrollFrame.viewPort, text="Specific Day", variable=self.radiovar,
                               value="Specific Day",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask())
+                              font=self.font, command=lambda: self.displayTask(),bg="white")
         self.R2 = Radiobutton(self.scrollFrame.viewPort, text="Between two days", variable=self.radiovar,
                               value="Between two days",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask())
+                              font=self.font, command=lambda: self.displayTask(),bg="white")
         self.R3 = Radiobutton(self.scrollFrame.viewPort, text="All Upcoming", variable=self.radiovar,
                               value="All Upcoming",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask())
+                              font=self.font, command=lambda: self.displayTask(),bg="white")
         self.R4 = Radiobutton(self.scrollFrame.viewPort, text="All", variable=self.radiovar, value="All",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask())
+                              font=self.font, command=lambda: self.displayTask(),bg="white")
         # self.back = Button(self.scrollFrame.viewPort, text="Back", fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
         #                  command=lambda: master.master.master.switch_frame(SchedulePage))
         # self.back.image=backicon
-        self.displayTaskLabel = Label(self.scrollFrame.viewPort, font=("Verdana", "12", "bold"))
+        self.displayTaskLabel = Label(self.scrollFrame.viewPort, font=("Verdana", "12", "bold"),bg="white")
         # self.ntask = None
         # self.ndate = None
         # self.ntime = None
@@ -417,7 +417,7 @@ class SchedulePage(Frame):
             item.grid_forget()
         self.initTask()
         #self.renewButtonTask()
-        self.displayTaskButton['bg'] = 'pink'
+        self.displayTaskButton['bg'] = 'indianred3'
         self.displayTodoButton['bg'] = 'hotpink4'
         self.displayNoteButton['bg'] = 'hotpink4'
         self.display.grid(row=0, column=0, columnspan=5)
@@ -503,9 +503,9 @@ class SchedulePage(Frame):
                 index = 5
                 if len(tasks) > 0:
                     stringtask = "Task-Id\t\tTask\t\tDate\t\tTime\n"
-                    Label(self.scrollFrame.viewPort, text="Task", font=("Artefact", "12", "bold")).grid(row=index, column=0)
-                    Label(self.scrollFrame.viewPort, text="Date", font=("Artefact", "12", "bold")).grid(row=index, column=1)
-                    Label(self.scrollFrame.viewPort, text="Time", font=("Artefact", "12", "bold")).grid(row=index, column=2)
+                    Label(self.scrollFrame.viewPort, text="Task", font=("Artefact", "12", "bold"),bg="white").grid(row=index, column=0)
+                    Label(self.scrollFrame.viewPort, text="Date", font=("Artefact", "12", "bold"),bg="white").grid(row=index, column=1)
+                    Label(self.scrollFrame.viewPort, text="Time", font=("Artefact", "12", "bold"),bg="white").grid(row=index, column=2)
 
                     dimage = PhotoImage(file='images\delete.png')
                     deleteicon = dimage.subsample(10, 10)
@@ -514,9 +514,9 @@ class SchedulePage(Frame):
                     # each task is displayed in a row and a delete button is associated with it
                     for task in tasks:
                         index = index + 1
-                        Label(self.scrollFrame.viewPort, text=task[1], font=self.font, padx=5, pady=5).grid(row=index, column=0,sticky=W)
-                        Label(self.scrollFrame.viewPort, text=str(task[2]), font=self.font, padx=5, pady=5).grid(row=index, column=1,sticky=W)
-                        Label(self.scrollFrame.viewPort, text=str(task[3]), font=self.font, padx=5, pady=5).grid(row=index, column=2,sticky=W)
+                        Label(self.scrollFrame.viewPort, text=task[1], font=self.font, padx=5, pady=5,bg="white").grid(row=index, column=0,sticky=W)
+                        Label(self.scrollFrame.viewPort, text=str(task[2]), font=self.font, padx=5, pady=5,bg="white").grid(row=index, column=1,sticky=W)
+                        Label(self.scrollFrame.viewPort, text=str(task[3]), font=self.font, padx=5, pady=5,bg="white").grid(row=index, column=2,sticky=W)
                         d = Button(self.scrollFrame.viewPort, text="Delete", image=deleteicon,
                                    command=lambda id=task[0], row=index: self.deleteTask(id, row, index + 1))
                         d.image = deleteicon
@@ -596,20 +596,20 @@ class SchedulePage(Frame):
             query = "SELECT * FROM task WHERE task_id=" + str(id) + ";"
             cursor.execute(query)
             task = cursor.fetchone()
-            Label(self.scrollFrame.viewPort, text="").grid(row=i, column=0, columnspan=5)
+            Label(self.scrollFrame.viewPort, text="",bg="white").grid(row=i, column=0, columnspan=5)
             i += 1
             self.ntask = StringVar(value=task[1])
             self.ndate = StringVar(value=task[2])
             self.ntime = StringVar(value=task[3])
-            Label(self.scrollFrame.viewPort, text="Task:", font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
+            Label(self.scrollFrame.viewPort, text="Task:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=i, column=0, columnspan=2)
             self.inputTask = Entry(self.scrollFrame.viewPort, textvariable=self.ntask)
             self.inputTask.grid(row=i, column=2, columnspan=2)
             i += 1
-            Label(self.scrollFrame.viewPort, text="Date:", font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
+            Label(self.scrollFrame.viewPort, text="Date:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=i, column=0, columnspan=2)
             self.inputDate = Entry(self.scrollFrame.viewPort, textvariable=self.ndate)
             self.inputDate.grid(row=i, column=2, columnspan=2)
             i += 1
-            Label(self.scrollFrame.viewPort, text="Time:", font=("Lucida Bright", "10", "bold")).grid(row=i, column=0, columnspan=2)
+            Label(self.scrollFrame.viewPort, text="Time:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=i, column=0, columnspan=2)
             self.inputTime = Entry(self.scrollFrame.viewPort, textvariable=self.ntime)
             self.inputTime.grid(row=i, column=2, columnspan=2)
             i += 1
@@ -700,9 +700,9 @@ class SchedulePage(Frame):
                 for label in self.scrollFrame.viewPort.grid_slaves():
                     if int(label.grid_info()["row"])==row and int(label.grid_info()["column"])<=2:
                         label.grid_forget()
-                Label(self.scrollFrame.viewPort,font=self.font, text=task).grid(row=row, column=0)
-                Label(self.scrollFrame.viewPort, font=self.font,text=date).grid(row=row, column=1)
-                Label(self.scrollFrame.viewPort,font=self.font, text=time).grid(row=row, column=2)
+                Label(self.scrollFrame.viewPort,font=self.font, text=task, bg="white").grid(row=row, column=0)
+                Label(self.scrollFrame.viewPort, font=self.font,text=date,bg="white").grid(row=row, column=1)
+                Label(self.scrollFrame.viewPort,font=self.font, text=time,bg="white").grid(row=row, column=2)
                 assistant_speaks("Task edited successfully")
                 connection.commit()
             elif len(task)==0:
@@ -742,7 +742,7 @@ class SchedulePage(Frame):
         for item in widget_list:
             item.grid_forget()
         self.displayTaskButton['bg'] = 'hotpink4'
-        self.displayTodoButton['bg'] = 'pink'
+        self.displayTodoButton['bg'] = 'indianred3'
         self.displayNoteButton['bg'] = 'hotpink4'
         self.printData()
 
@@ -870,9 +870,9 @@ class SchedulePage(Frame):
         self.printData()
 
     def initNote(self):
-        self.display = Label(self.scrollFrame.viewPort, text="Notes created", font=("calibri", 12, "bold"))
-        self.display1 = Label(self.scrollFrame.viewPort, text="Date created", font=("calibri", 12, "bold"))
-        self.display2 = Label(self.scrollFrame.viewPort, text="Last modified", font=("calibri", 12, "bold"))
+        self.display = Label(self.scrollFrame.viewPort, text="Notes created", font=("calibri", 12, "bold"),bg="white")
+        self.display1 = Label(self.scrollFrame.viewPort, text="Date created", font=("calibri", 12, "bold"),bg="white")
+        self.display2 = Label(self.scrollFrame.viewPort, text="Last modified", font=("calibri", 12, "bold"),bg="white")
         self.font = ("calibri", "11")
         self.radiovar = StringVar()
 
@@ -883,7 +883,7 @@ class SchedulePage(Frame):
         self.initNote()
         self.displayTaskButton['bg'] = 'hotpink4'
         self.displayTodoButton['bg'] = 'hotpink4'
-        self.displayNoteButton['bg'] = 'pink'
+        self.displayNoteButton['bg'] = 'indianred3'
         self.display.grid(row=1, column=0)
         self.display1.grid(row=1, column=1)
         self.display2.grid(row=1, column=2)
@@ -904,9 +904,9 @@ class SchedulePage(Frame):
             for title in data:
                 Radiobutton(self.scrollFrame.viewPort, text=title[1], font=self.font, padx=5, pady=5, variable=self.radiovar,
                             tristatevalue='x', value=title[0],
-                            command=lambda row=i: self.displayNote(row, i + 1)).grid(row=i, column=0,sticky=W)
-                Label(self.scrollFrame.viewPort, text=title[2].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5).grid(row=i, column=1,sticky=W)
-                Label(self.scrollFrame.viewPort, text=title[3].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5).grid(row=i, column=2, sticky=W)
+                            command=lambda row=i: self.displayNote(row, i + 1),bg="white").grid(row=i, column=0,sticky=W)
+                Label(self.scrollFrame.viewPort, text=title[2].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5,bg="white").grid(row=i, column=1,sticky=W)
+                Label(self.scrollFrame.viewPort, text=title[3].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5,bg="white").grid(row=i, column=2, sticky=W)
                 i = i + 1
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -940,7 +940,7 @@ class SchedulePage(Frame):
             self.speakicon = self.mikeTodo.subsample(25, 20)
             self.title = StringVar(value=notes[4])
 
-            Label(self.scrollFrame.viewPort, text="Title:", font=("Lucida Bright", "10", "bold")).grid(row=index, column=0)
+            Label(self.scrollFrame.viewPort, text="Title:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=index, column=0)
             self.inputTitle = Entry(self.scrollFrame.viewPort, textvariable=self.title)
             self.inputTitle.grid(row=index, column=1, columnspan=2)
 
@@ -949,7 +949,7 @@ class SchedulePage(Frame):
             self.s.image = self.speakicon
             self.s.grid(row=index, column=3, padx=5, ipadx=3)
             index += 1
-            Label(self.scrollFrame.viewPort, text="Note:", font=("Lucida Bright", "10", "bold")).grid(row=index, column=0)
+            Label(self.scrollFrame.viewPort, text="Note:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=index, column=0)
             self.inputNote=Text(self.scrollFrame.viewPort,height=5,width=20)
             self.inputNote.grid(row=index, column=1, columnspan=2)
             self.inputNote.delete(1.0, END)
@@ -1080,9 +1080,204 @@ class DisplayNotePage(Frame):
 
 
 class HelpPage(Frame):
+
     def __init__(self, master):
         Frame.__init__(self, master)
+
+        # display
+        self.displayAll = Frame(self, width=500, height=500, bd=5, relief=RAISED)
+        self.displayAll.grid(row=0, column=0, padx=5, pady=5, sticky='news')
+        self.scrollFrame = ScrollFrame(self.displayAll, 440, 450)
+        self.scrollFrame.pack(side="top", fill="both", expand=True)
+        label1=Label(self.scrollFrame.viewPort,text="Quick Guide for using the app",font=('Arial', 17, 'bold'),bg="white",fg="palevioletred4")
+        label1.grid(row=0,column=0)
+        label = Label(self.scrollFrame.viewPort, text="An app for Tasks, To Do and Notes\nall three in one!",
+                      font=('Helvetica', 15), bg="white",fg="Salmon3")
+        label.grid(row=1, column=0,)
+        label = Label(self.scrollFrame.viewPort,text="Instructions for Task:",font=('TimesNewRoman',13,'bold'),bg="darksalmon",fg="maroon")
+        label.grid(row=3, column=0)
+        label = Label(self.scrollFrame.viewPort, text="#Tasks can be added using speech with the help\nof the mic button or manually.",
+                      font=('Helvetica', 13,'bold'), bg="white", fg="gray13")
+        label.grid(row=4, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Click on the mic, you will hear an assistant speak.\nFirst you need to speak the Task to be added. ",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=5, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Next you need to specify the date.While using speech,user can\nuse following formats: day of the week, today, day (date),\nday and month, day month and year.The speech date is converted\n to YYYY-MM-DD format.If not specified current date will be taken.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=6, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Lastly, you need to mention the time.It is optional.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=7, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Finally,click on the 'ADD' button.\nThe Task will be stored.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=8, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#To view the entered tasks:",
+                      font=('Helvetica', 13,'bold'), bg="white", fg="gray13")
+        label.grid(row=9, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Click on 'Schedule' present in the home page.Then, click on \n'Display Tasks' to view the tasks entered.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=10, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> After that you can see a task,by choosing any of the options\nand then accordingly you can view the tasks.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=11, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Tasks are displayed according to the option chosen.Next to \nthe tasks,you have two options:one to edit and the \nother to delete the task.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=12, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#To edit the entered tasks:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=13, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> The edit button next to the displayed task is to be clicked.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=14, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> The assistant first asks whether there is any change in the field of\n task,date or time.If yes then,new data is asked to the user.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=15, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> You can then edit the Task,date or time and after completing\n the changes,click on 'Save changes'",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=16, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#To delete the entered tasks:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=17, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> A task can simply be deleted by clicking the delete icon.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=18, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort, text="Instructions for To Do:", font=('TimesNewRoman', 13, 'bold'),
+                      bg="darksalmon", fg="maroon")
+        label.grid(row=19, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#Various commands associated for creating,opening\n and deleting a ToDo list while clicking on the \nmic button in the Todo section:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=21, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To create a new Todo List: 'CREATE (list_name)'.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=22, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To open a Todo List: 'OPEN (list_name)'.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=23, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To delete a Todo List: DELETE (list_name)'.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=24, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#Commands for Displaying a ToDo list:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=25, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To display all the entered Todo list items:\n DISPLAY (list_name)' or\n 'DISPLAY' or\n Anything starting with 'DISPLAY'.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=26, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#Commands to Edit a ToDo list:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=27, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> First,you need to open the list using OPEN command as \nmentioned above.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=28, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To add a Todo: 'ADD (todo_name)'",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=29, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To delete a Todo: 'DELETE (todo_name)'",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=30, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To check a Todo: 'CHECK (todo_name)'",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=31, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To uncheck a Todo: 'UNCHECK (todo_name)'",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=32, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> To clear all Todo: 'CLEAR ALL' or\n'CLEAR LIST' or 'CLEAR' or\nAnything starting with CLEAR.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=33, column=0,sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> If the editing of list is done, and now to see the list,\nSay EXIT.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=34, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort, text="Instructions for Notes:", font=('TimesNewRoman', 13, 'bold'),
+                      bg="darksalmon", fg="maroon")
+        label.grid(row=35, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#Notes can be added using Speech with the help of \n mic button or manually.",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=36, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Click on the mic, you will hear an assistant speak.\nFirst you need to speak the Title of the note \nto be added. ",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=37, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Next you need to click on the mic button next to the note textbox.\nThen, you can speak the note accordingly.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=38, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> The date and time of note creation will be taken according\n to the system.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=39, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Finally,click on the 'ADD' button.The Note will be stored.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=40, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#To view the entered tasks:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=41, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Click on 'Schedule' present in the home page.Then, click on \n'Display Notes' to view the entered notes.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=42, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> After that you can see the titles of the notes sorted according\n to date created",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=43, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> Then click on the radiobutton present before the title and then \nyou can view the Title as well as the Note.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=44, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#To edit the entered notes:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=45, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> You can change the title or the note in the textbox where it is\n displayed and then click on the Edit icon.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=46, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> The date when the note is modified will be fetched accordingly.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=47, column=0, sticky=W)
+        label = Label(self.scrollFrame.viewPort,
+                      text="#To delete the entered notes:",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
+        label.grid(row=48, column=0)
+        label = Label(self.scrollFrame.viewPort,
+                      text="> A note can simply be deleted by clicking the delete icon.",
+                      font=('Arial', 12), bg="white", fg="gray13")
+        label.grid(row=49, column=0, sticky=W)
+        label1 = Label(self.scrollFrame.viewPort, text="Enjoy and make the most of it!!", font=('Arial', 15, 'bold'),
+                       bg="white", fg="palevioletred4")
+        label1.grid(row=50, column=0)
+        #back
         self.back = Button(self, text="Back",
-                           fg="white", bg="DeepPink2",
-                           command=lambda: master.switch_frame(SchedulePage))
-        self.back.grid(row=0, column=0)
+                           fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
+                           command=lambda: master.master.master.switch_frame(StartPage))
+        self.back.grid(row=1, column=0, padx=5, pady=5)
