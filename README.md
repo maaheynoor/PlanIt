@@ -18,4 +18,4 @@ pyttsx3,
 tkinter,
 psycopg2
 
-![Homepage](/images/first todo.png)
+![Homepage](https://user-images.githubusercontent.com/50228870/82469358-83561f80-9ae1-11ea-8d2e-9d1bbb6ae09a.PNG)
