@@ -150,8 +150,8 @@ class StartPage(Frame):
             print(date)
             time = self.inputTime.get()
             print(time)
-            if len(task)!=0 and len(date)!=0:
-                if len(time)!=0:
+            if len(task) != 0 and len(date) != 0:
+                if len(time) != 0:
                     str = "INSERT INTO task(task,date,time) VALUES ('" + task + "','" + date + "','" + time + "');"
 
                 else:
@@ -162,9 +162,9 @@ class StartPage(Frame):
                 self.inputTask.delete(0, END)
                 self.inputDate.delete(0, END)
                 self.inputTime.delete(0, END)
-            elif len(task)==0:
+            elif len(task) == 0:
                 assistant_speaks("Please enter task")
-            elif len(date)==0:
+            elif len(date) == 0:
                 assistant_speaks("Please enter date")
 
         except (Exception, psycopg2.DatabaseError) as error:
@@ -319,7 +319,7 @@ class StartPage(Frame):
             now = datetime.datetime.now()
             date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
             print(date_time)
-            if len(self.inputNote.get("1.0","end-1c"))!=0:
+            if len(self.inputNote.get("1.0", "end-1c")) != 0:
                 str = "INSERT INTO note(note,title,date_created,date_modified) VALUES ('" + note + "','" + title + "','" + date_time + "','" + date_time + "');"
                 cursor.execute(str)
                 connection.commit()
@@ -383,49 +383,49 @@ class SchedulePage(Frame):
 
     def initTask(self):
         self.display = Label(self.scrollFrame.viewPort, text="Display Tasks for which of the following:",
-                             font=("calibri", 12, "bold"),bg="white")
+                             font=("calibri", 12, "bold"), bg="white")
         self.font = ("calibri", "11")
         self.radiovar = StringVar()
         # Option for specific day, btw two days, upcoming tasks or all task in the db
         self.R1 = Radiobutton(self.scrollFrame.viewPort, text="Specific Day", variable=self.radiovar,
                               value="Specific Day",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask(),bg="white")
+                              font=self.font, command=lambda: self.displayTask(), bg="white")
         self.R2 = Radiobutton(self.scrollFrame.viewPort, text="Between two days", variable=self.radiovar,
                               value="Between two days",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask(),bg="white")
+                              font=self.font, command=lambda: self.displayTask(), bg="white")
         self.R3 = Radiobutton(self.scrollFrame.viewPort, text="All Upcoming", variable=self.radiovar,
                               value="All Upcoming",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask(),bg="white")
+                              font=self.font, command=lambda: self.displayTask(), bg="white")
         self.R4 = Radiobutton(self.scrollFrame.viewPort, text="All", variable=self.radiovar, value="All",
                               tristatevalue="x",
-                              font=self.font, command=lambda: self.displayTask(),bg="white")
+                              font=self.font, command=lambda: self.displayTask(), bg="white")
         # self.back = Button(self.scrollFrame.viewPort, text="Back", fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
         #                  command=lambda: master.master.master.switch_frame(SchedulePage))
         # self.back.image=backicon
-        self.displayTaskLabel = Label(self.scrollFrame.viewPort, font=("Verdana", "12", "bold"),bg="white")
+        self.displayTaskLabel = Label(self.scrollFrame.viewPort, font=("Verdana", "12", "bold"), bg="white")
         # self.ntask = None
         # self.ndate = None
         # self.ntime = None
-
 
     def displayTaskAction(self):
         widget_list = all_children(self.scrollFrame)
         for item in widget_list:
             item.grid_forget()
         self.initTask()
-        #self.renewButtonTask()
+        # self.renewButtonTask()
         self.displayTaskButton['bg'] = 'indianred3'
         self.displayTodoButton['bg'] = 'hotpink4'
+        3
         self.displayNoteButton['bg'] = 'hotpink4'
         self.display.grid(row=0, column=0, columnspan=5)
-        self.R1.grid(row=1, column=0, columnspan=2,sticky=W)
-        self.R2.grid(row=1, column=2, columnspan=3,sticky=W)
-        self.R3.grid(row=2, column=0, columnspan=2,sticky=W)
-        self.R4.grid(row=2, column=2, columnspan=3,sticky=W)
-        #self.back.grid(row=3, column=0, columnspan=5)
+        self.R1.grid(row=1, column=0, columnspan=2, sticky=W)
+        self.R2.grid(row=1, column=2, columnspan=3, sticky=W)
+        self.R3.grid(row=2, column=0, columnspan=2, sticky=W)
+        self.R4.grid(row=2, column=2, columnspan=3, sticky=W)
+        # self.back.grid(row=3, column=0, columnspan=5)
         self.displayTaskLabel.grid(row=4, column=0, columnspan=5, pady=8)
 
     def displayTask(self):
@@ -450,8 +450,8 @@ class SchedulePage(Frame):
             edate = DateFromText(edate)
             if sdate == None or edate == None:
                 input = False
-            elif sdate>edate:
-                input =False
+            elif sdate > edate:
+                input = False
                 assistant_speaks("Start date cannot be greater than end date")
             else:
                 input = True
@@ -503,9 +503,12 @@ class SchedulePage(Frame):
                 index = 5
                 if len(tasks) > 0:
                     stringtask = "Task-Id\t\tTask\t\tDate\t\tTime\n"
-                    Label(self.scrollFrame.viewPort, text="Task", font=("Artefact", "12", "bold"),bg="white").grid(row=index, column=0)
-                    Label(self.scrollFrame.viewPort, text="Date", font=("Artefact", "12", "bold"),bg="white").grid(row=index, column=1)
-                    Label(self.scrollFrame.viewPort, text="Time", font=("Artefact", "12", "bold"),bg="white").grid(row=index, column=2)
+                    Label(self.scrollFrame.viewPort, text="Task", font=("Artefact", "12", "bold"), bg="white").grid(
+                        row=index, column=0)
+                    Label(self.scrollFrame.viewPort, text="Date", font=("Artefact", "12", "bold"), bg="white").grid(
+                        row=index, column=1)
+                    Label(self.scrollFrame.viewPort, text="Time", font=("Artefact", "12", "bold"), bg="white").grid(
+                        row=index, column=2)
 
                     dimage = PhotoImage(file='images\delete.png')
                     deleteicon = dimage.subsample(10, 10)
@@ -514,9 +517,12 @@ class SchedulePage(Frame):
                     # each task is displayed in a row and a delete button is associated with it
                     for task in tasks:
                         index = index + 1
-                        Label(self.scrollFrame.viewPort, text=task[1], font=self.font, padx=5, pady=5,bg="white").grid(row=index, column=0,sticky=W)
-                        Label(self.scrollFrame.viewPort, text=str(task[2]), font=self.font, padx=5, pady=5,bg="white").grid(row=index, column=1,sticky=W)
-                        Label(self.scrollFrame.viewPort, text=str(task[3]), font=self.font, padx=5, pady=5,bg="white").grid(row=index, column=2,sticky=W)
+                        Label(self.scrollFrame.viewPort, text=task[1], font=self.font, padx=5, pady=5, bg="white").grid(
+                            row=index, column=0, sticky=W)
+                        Label(self.scrollFrame.viewPort, text=str(task[2]), font=self.font, padx=5, pady=5,
+                              bg="white").grid(row=index, column=1, sticky=W)
+                        Label(self.scrollFrame.viewPort, text=str(task[3]), font=self.font, padx=5, pady=5,
+                              bg="white").grid(row=index, column=2, sticky=W)
                         d = Button(self.scrollFrame.viewPort, text="Delete", image=deleteicon,
                                    command=lambda id=task[0], row=index: self.deleteTask(id, row, index + 1))
                         d.image = deleteicon
@@ -582,7 +588,7 @@ class SchedulePage(Frame):
         # update width and height of the canvas self is frame which is binded to canvas.. so self.master is canvas
         self.master.update()
         self.master.configure(scrollregion=self.master.bbox("all"))
-        #self.displayTaskAction()
+        # self.displayTaskAction()
 
     def displayEdit(self, id, row, index):
         i = index
@@ -596,20 +602,26 @@ class SchedulePage(Frame):
             query = "SELECT * FROM task WHERE task_id=" + str(id) + ";"
             cursor.execute(query)
             task = cursor.fetchone()
-            Label(self.scrollFrame.viewPort, text="",bg="white").grid(row=i, column=0, columnspan=5)
+            Label(self.scrollFrame.viewPort, text="", bg="white").grid(row=i, column=0, columnspan=5)
             i += 1
             self.ntask = StringVar(value=task[1])
             self.ndate = StringVar(value=task[2])
             self.ntime = StringVar(value=task[3])
-            Label(self.scrollFrame.viewPort, text="Task:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=i, column=0, columnspan=2)
+            Label(self.scrollFrame.viewPort, text="Task:", font=("Lucida Bright", "10", "bold"), bg="white").grid(row=i,
+                                                                                                                  column=0,
+                                                                                                                  columnspan=2)
             self.inputTask = Entry(self.scrollFrame.viewPort, textvariable=self.ntask)
             self.inputTask.grid(row=i, column=2, columnspan=2)
             i += 1
-            Label(self.scrollFrame.viewPort, text="Date:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=i, column=0, columnspan=2)
+            Label(self.scrollFrame.viewPort, text="Date:", font=("Lucida Bright", "10", "bold"), bg="white").grid(row=i,
+                                                                                                                  column=0,
+                                                                                                                  columnspan=2)
             self.inputDate = Entry(self.scrollFrame.viewPort, textvariable=self.ndate)
             self.inputDate.grid(row=i, column=2, columnspan=2)
             i += 1
-            Label(self.scrollFrame.viewPort, text="Time:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=i, column=0, columnspan=2)
+            Label(self.scrollFrame.viewPort, text="Time:", font=("Lucida Bright", "10", "bold"), bg="white").grid(row=i,
+                                                                                                                  column=0,
+                                                                                                                  columnspan=2)
             self.inputTime = Entry(self.scrollFrame.viewPort, textvariable=self.ntime)
             self.inputTime.grid(row=i, column=2, columnspan=2)
             i += 1
@@ -622,7 +634,8 @@ class SchedulePage(Frame):
 
             simage = PhotoImage(file='images\save_edit.png')
             saveicon = simage.subsample(10, 10)
-            s = Button(self.scrollFrame.viewPort, text="Save Changes", font=("Lucida Bright", "10", "bold"), image=saveicon, compound=LEFT,
+            s = Button(self.scrollFrame.viewPort, text="Save Changes", font=("Lucida Bright", "10", "bold"),
+                       image=saveicon, compound=LEFT,
                        command=lambda: self.editTask(id, row, index))
             s.image = saveicon
             s.grid(row=i, column=2, columnspan=3)
@@ -686,10 +699,10 @@ class SchedulePage(Frame):
             print(date)
             time = self.inputTime.get()
             print(time)
-            if len(task)!=0 and len(date)!=0:
-                if len(time)!=0:
+            if len(task) != 0 and len(date) != 0:
+                if len(time) != 0:
                     query = "UPDATE task SET task='" + task + "',date='" + date + "',time='" + time + "' WHERE task_id=" + str(
-                    id) + ";"
+                        id) + ";"
                 else:
                     query = "UPDATE task SET task='" + task + "',date='" + date + "',time=NULL WHERE task_id=" + str(
                         id) + ";"
@@ -698,16 +711,16 @@ class SchedulePage(Frame):
                     if int(gridrow.grid_info()["row"]) >= index:
                         gridrow.grid_forget()
                 for label in self.scrollFrame.viewPort.grid_slaves():
-                    if int(label.grid_info()["row"])==row and int(label.grid_info()["column"])<=2:
+                    if int(label.grid_info()["row"]) == row and int(label.grid_info()["column"]) <= 2:
                         label.grid_forget()
-                Label(self.scrollFrame.viewPort,font=self.font, text=task, bg="white").grid(row=row, column=0)
-                Label(self.scrollFrame.viewPort, font=self.font,text=date,bg="white").grid(row=row, column=1)
-                Label(self.scrollFrame.viewPort,font=self.font, text=time,bg="white").grid(row=row, column=2)
+                Label(self.scrollFrame.viewPort, font=self.font, text=task, bg="white").grid(row=row, column=0)
+                Label(self.scrollFrame.viewPort, font=self.font, text=date, bg="white").grid(row=row, column=1)
+                Label(self.scrollFrame.viewPort, font=self.font, text=time, bg="white").grid(row=row, column=2)
                 assistant_speaks("Task edited successfully")
                 connection.commit()
-            elif len(task)==0:
+            elif len(task) == 0:
                 assistant_speaks("Please enter task")
-            elif len(date)==0:
+            elif len(date) == 0:
                 assistant_speaks("Please enter date")
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
@@ -722,17 +735,30 @@ class SchedulePage(Frame):
         self.master.configure(scrollregion=self.master.bbox("all"))
 
     def initTodo(self):
-        self.backinner = Button(self.scrollFrame.viewPort, text="Back", width=4,
-                                fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 15),
+        #icons
+        dImage = PhotoImage(file='images\delete.png')
+        self.deleteIcon = dImage.subsample(10, 10)
+        aImage = PhotoImage(file='images\plus_PNG94.png')
+        self.addIcon = aImage.subsample(14, 14)
+        upload = PhotoImage(file=r"images\add_1.png")
+        self.uploadIcon = upload.subsample(8, 8)
+        bImage = PhotoImage(file=r"images\backIcon.png")
+        self.backIcon = bImage.subsample(20, 20)
+        #widgets
+        self.backinner = Button(self.scrollFrame.viewPort, text="add", image=self.backIcon,background='white', borderwidth=2, width=25, height=25,
+                                relief="ridge",
                                 command=lambda: self.backAction())
-        self.add = Button(self.scrollFrame.viewPort, text="+", width=10,
-                          fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 15),
+        self.backinner.image = self.backIcon
+        self.add = Button(self.scrollFrame.viewPort, text="add", image=self.addIcon, background='white', borderwidth=2, width=25, height=25,
+                             relief="ridge",
                           command=lambda: self.addNewFile())
-        self.inputNew = Entry(self.scrollFrame.viewPort, width=30,
-                              fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 15))
-        self.tempButton = Button(self.scrollFrame.viewPort, text="Add", width=3,
-                                 fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 15),
+        self.add.image = self.addIcon
+        self.inputNew = Entry(self.scrollFrame.viewPort, width=38,
+                              fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 12))
+        self.tempButton = Button(self.scrollFrame.viewPort, text="add", image=self.uploadIcon, background='white', borderwidth=2, width=25, height=25,
+                                relief="ridge",
                                  command=lambda: self.addSubmit())
+        self.tempButton.image = self.uploadIcon
         self.checkbuttons = []
         self.checkvalues = []
         self.file = None
@@ -751,17 +777,23 @@ class SchedulePage(Frame):
         self.printData()
 
     def renewButton(self):
-        self.backinner = Button(self.scrollFrame.viewPort, text="Back", width=4,
-                                fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 10),
+        self.backinner = Button(self.scrollFrame.viewPort, text="add", image=self.backIcon, background='white', borderwidth=2,
+                                width=25, height=25,
+                                relief="ridge",
                                 command=lambda: self.backAction())
-        self.add = Button(self.scrollFrame.viewPort, text="+", width=10,
-                          fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 10),
+        self.backinner.image = self.backIcon
+        self.add = Button(self.scrollFrame.viewPort, text="add", image=self.addIcon, background='white', borderwidth=2,
+                          width=25, height=25,
+                          relief="ridge", font=('Verdana', 15),
                           command=lambda: self.addNewFile())
-        self.inputNew = Entry(self.scrollFrame.viewPort, width=15,
-                              fg="hotpink4",bd=2, relief="ridge", font=('Verdana', 15))
-        self.tempButton = Button(self.scrollFrame.viewPort, text="Add", width=3,
-                                 fg="white", bg="hotpink4", relief="ridge", font=('Verdana', 10),
+        self.add.image = self.addIcon
+        self.inputNew = Entry(self.scrollFrame.viewPort, width=38,
+                              fg="hotpink4", bd=2, relief="ridge", font=('Verdana', 12))
+        self.tempButton = Button(self.scrollFrame.viewPort, text="add", image=self.uploadIcon, background='white',
+                                 borderwidth=2, width=25, height=25,
+                                 relief="ridge",
                                  command=lambda: self.addSubmit())
+        self.tempButton.image = self.uploadIcon
         self.add.grid(row=0, column=0)
         if self.file is not None:
             self.backinner.grid(row=0, column=1)
@@ -789,20 +821,21 @@ class SchedulePage(Frame):
                 i = 2
                 for row in rows:
                     a = row[0]
-                    Button(self.scrollFrame.viewPort, text=row[0], fg="hotpink4", borderwidth=2, width=19,
-                          relief="ridge", font=('Verdana', 15), command=lambda x=a: self.displayList(x)).grid(
+                    Button(self.scrollFrame.viewPort, text=row[0], fg="hotpink4", background='white',borderwidth=2, width=38,
+                           relief="ridge", font=('Verdana', 12), command=lambda x=a: self.displayList(x)).grid(
                         row=i, column=0)
-                    Button(self.scrollFrame.viewPort, text="x", fg="white", background="red", borderwidth=2, width=3,
-                          relief="ridge", font=('Verdana', 15), command=lambda x=a: self.removeFile(x)).grid(
-                        row=i, column=1)
+                    d = Button(self.scrollFrame.viewPort, text="Delete", image=self.deleteIcon,background='white', borderwidth=2, width=25, height=25,
+                             relief="ridge", command=lambda x=a: self.removeFile(x))
+                    d.image = self.deleteIcon
+                    d.grid(row=i, column=1)
                     i += 1
             else:
                 str = "select todo_name,completed from todo_names where list_name = '%s'"
                 args = self.file
                 cursor.execute(str % args)
                 rows = cursor.fetchall()
-                Label(self.scrollFrame.viewPort, text=self.file, fg="hotpink4", borderwidth=2, width=18,
-                          relief="ridge", font=('Verdana', 15, 'bold')).grid(row=2, column=0)
+                Label(self.scrollFrame.viewPort, text=self.file, fg="hotpink4", background='white', borderwidth=2, width=35,
+                      relief="ridge", font=('Verdana', 12, 'bold')).grid(row=2, column=0, pady=10)
                 i = 3
                 self.checkbuttons = []
                 self.checkvalues = []
@@ -813,15 +846,18 @@ class SchedulePage(Frame):
                         self.checkbuttons.append(
                             Checkbutton(self.scrollFrame.viewPort, text=f'{row[0]}', variable=self.checkvalues[i - 3],
                                         onvalue=True,
-                                        offvalue=False, fg='hotpink4', width=28, font=('Verdana', 10), command=lambda x=a: self.selectTodo(x)))
+                                        offvalue=False, fg='hotpink4',background='white', font=('Verdana', 11),
+                                        command=lambda x=a: self.selectTodo(x)))
                     else:
                         self.checkvalues[i - 3].set(True)
                         self.checkbuttons.append(
                             Checkbutton(self.scrollFrame.viewPort, text=f'{row[0]}', variable=self.checkvalues[i - 3],
                                         onvalue=True,
-                                        offvalue=False, fg='hotpink4', width=28, font=('Verdana', 10), command=lambda x=a: self.deselectTodo(x)))
+                                        offvalue=False, fg='hotpink4', background='white', font=('Verdana', 11),
+                                        command=lambda x=a: self.deselectTodo(x)))
                     self.checkbuttons[i - 3].grid(row=i + 1, column=0, sticky=W)
-                    Button(self.scrollFrame.viewPort, text="x", fg='white',background="red", width=5, font=('Verdana', 10), command=lambda x=a: self.remove(x)).grid(
+                    Button(self.scrollFrame.viewPort, text="Delete", image=self.deleteIcon, background='white', borderwidth=2, width=25, height=25,
+                             relief="ridge", command=lambda x=a: self.remove(x)).grid(
                         row=i + 1, column=1)
                     i += 1
         except (Exception, psycopg2.DatabaseError) as error:
@@ -870,9 +906,9 @@ class SchedulePage(Frame):
         self.printData()
 
     def initNote(self):
-        self.display = Label(self.scrollFrame.viewPort, text="Notes created", font=("calibri", 12, "bold"),bg="white")
-        self.display1 = Label(self.scrollFrame.viewPort, text="Date created", font=("calibri", 12, "bold"),bg="white")
-        self.display2 = Label(self.scrollFrame.viewPort, text="Last modified", font=("calibri", 12, "bold"),bg="white")
+        self.display = Label(self.scrollFrame.viewPort, text="Notes created", font=("calibri", 12, "bold"), bg="white")
+        self.display1 = Label(self.scrollFrame.viewPort, text="Date created", font=("calibri", 12, "bold"), bg="white")
+        self.display2 = Label(self.scrollFrame.viewPort, text="Last modified", font=("calibri", 12, "bold"), bg="white")
         self.font = ("calibri", "11")
         self.radiovar = StringVar()
 
@@ -902,11 +938,15 @@ class SchedulePage(Frame):
             data = cursor.fetchall()
             i = 2
             for title in data:
-                Radiobutton(self.scrollFrame.viewPort, text=title[1], font=self.font, padx=5, pady=5, variable=self.radiovar,
+                Radiobutton(self.scrollFrame.viewPort, text=title[1], font=self.font, padx=5, pady=5,
+                            variable=self.radiovar,
                             tristatevalue='x', value=title[0],
-                            command=lambda row=i: self.displayNote(row, i + 1),bg="white").grid(row=i, column=0,sticky=W)
-                Label(self.scrollFrame.viewPort, text=title[2].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5,bg="white").grid(row=i, column=1,sticky=W)
-                Label(self.scrollFrame.viewPort, text=title[3].strftime('%Y-%m-%d %H:%M'), font=self.font,padx=5,pady=5,bg="white").grid(row=i, column=2, sticky=W)
+                            command=lambda row=i: self.displayNote(row, i + 1), bg="white").grid(row=i, column=0,
+                                                                                                 sticky=W)
+                Label(self.scrollFrame.viewPort, text=title[2].strftime('%Y-%m-%d %H:%M'), font=self.font, padx=5,
+                      pady=5, bg="white").grid(row=i, column=1, sticky=W)
+                Label(self.scrollFrame.viewPort, text=title[3].strftime('%Y-%m-%d %H:%M'), font=self.font, padx=5,
+                      pady=5, bg="white").grid(row=i, column=2, sticky=W)
                 i = i + 1
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -918,20 +958,20 @@ class SchedulePage(Frame):
                 cursor.close()
                 connection.close()
 
-    def displayNote(self,row,index):
-        note_index=index
+    def displayNote(self, row, index):
+        note_index = index
         try:
             note_id = self.radiovar.get()
             connection = psycopg2.connect(user="usertm",
                                           password="password",
-                                            host="127.0.0.1",
-                                              port="5432",
-                                              database="TaskManager")
+                                          host="127.0.0.1",
+                                          port="5432",
+                                          database="TaskManager")
             cursor = connection.cursor()
-            query = "SELECT * FROM note WHERE note_id='"+note_id+"' ORDER BY date_modified DESC;"
+            query = "SELECT * FROM note WHERE note_id='" + note_id + "' ORDER BY date_modified DESC;"
             cursor.execute(query)
-            notes=cursor.fetchone()
-             # the data from db is display in grid with row>=5
+            notes = cursor.fetchone()
+            # the data from db is display in grid with row>=5
             # First erase previous data
             for label in self.scrollFrame.viewPort.grid_slaves():
                 if int(label.grid_info()["row"]) >= note_index:
@@ -940,7 +980,8 @@ class SchedulePage(Frame):
             self.speakicon = self.mikeTodo.subsample(25, 20)
             self.title = StringVar(value=notes[4])
 
-            Label(self.scrollFrame.viewPort, text="Title:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=index, column=0)
+            Label(self.scrollFrame.viewPort, text="Title:", font=("Lucida Bright", "10", "bold"), bg="white").grid(
+                row=index, column=0)
             self.inputTitle = Entry(self.scrollFrame.viewPort, textvariable=self.title)
             self.inputTitle.grid(row=index, column=1, columnspan=2)
 
@@ -949,8 +990,9 @@ class SchedulePage(Frame):
             self.s.image = self.speakicon
             self.s.grid(row=index, column=3, padx=5, ipadx=3)
             index += 1
-            Label(self.scrollFrame.viewPort, text="Note:", font=("Lucida Bright", "10", "bold"),bg="white").grid(row=index, column=0)
-            self.inputNote=Text(self.scrollFrame.viewPort,height=5,width=20)
+            Label(self.scrollFrame.viewPort, text="Note:", font=("Lucida Bright", "10", "bold"), bg="white").grid(
+                row=index, column=0)
+            self.inputNote = Text(self.scrollFrame.viewPort, height=5, width=20)
             self.inputNote.grid(row=index, column=1, columnspan=2)
             self.inputNote.delete(1.0, END)
             self.inputNote.insert(END, notes[1])
@@ -961,26 +1003,28 @@ class SchedulePage(Frame):
             index += 1
             # Label(self, text=title,font=("Artefact","12","bold")).grid(row=index, column=0)
             # Label(self,font=("Artefact","12","bold")).grid(row=index+1, column=0)
-            #Label(self, text="Date and Time created",font=("Artefact","12","bold")).grid(row=index, column=2)
+            # Label(self, text="Date and Time created",font=("Artefact","12","bold")).grid(row=index, column=2)
             dimage = PhotoImage(file='images\delete_1.png')
             deleteicon = dimage.subsample(20, 20)
             eimage = PhotoImage(file='images\edit_1.png')
             editicon = eimage.subsample(20, 20)
-            d=Button(self.scrollFrame.viewPort,text="Delete",image=deleteicon, command=lambda id=notes[0]: self.deleteNote(id,row,note_index))
+            d = Button(self.scrollFrame.viewPort, text="Delete", image=deleteicon,
+                       command=lambda id=notes[0]: self.deleteNote(id, row, note_index))
             d.image = deleteicon
             d.grid(row=index, column=1)
-            e = Button(self.scrollFrame.viewPort, text="Edit", image=editicon,command=lambda id=notes[0]: self.editNote(id,row,note_index))
+            e = Button(self.scrollFrame.viewPort, text="Edit", image=editicon,
+                       command=lambda id=notes[0]: self.editNote(id, row, note_index))
             e.image = editicon
             e.grid(row=index, column=2)
-            #stringnote +=str(note[0])+"\t\t"+note[1]+"\t\t"+str(note[2])+"\t\t"+str(note[3])+"\n"
-            #print(stringnote)
+            # stringnote +=str(note[0])+"\t\t"+note[1]+"\t\t"+str(note[2])+"\t\t"+str(note[3])+"\n"
+            # print(stringnote)
             assistant_speaks("The Note is displayed")
             connection.commit()
         except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
         finally:
-           # closing database connection.
+            # closing database connection.
             if (connection):
                 cursor.close()
                 connection.close()
@@ -988,7 +1032,7 @@ class SchedulePage(Frame):
         self.master.update()
         self.master.configure(scrollregion=self.master.bbox("all"))
 
-    def deleteNote(self,id,row,index):
+    def deleteNote(self, id, row, index):
         try:
             connection = psycopg2.connect(user="usertm",
                                           password="password",
@@ -996,21 +1040,21 @@ class SchedulePage(Frame):
                                           port="5432",
                                           database="TaskManager")
             cursor = connection.cursor()
-            query="DELETE FROM note WHERE note_id="+str(id)+";"
+            query = "DELETE FROM note WHERE note_id=" + str(id) + ";"
             cursor.execute(query)
             for gridrow in self.scrollFrame.viewPort.grid_slaves():
                 if int(gridrow.grid_info()["row"]) >= index:
                     gridrow.grid_forget()
             for label in self.scrollFrame.viewPort.grid_slaves():
-                if int(label.grid_info()["row"])==row:
+                if int(label.grid_info()["row"]) == row:
                     label.grid_forget()
             assistant_speaks("Note deleted successfully")
             connection.commit()
-        except (Exception , psycopg2.DatabaseError) as error:
+        except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
         finally:
-        # closing database connection.
+            # closing database connection.
             if (connection):
                 cursor.close()
                 connection.close()
@@ -1018,7 +1062,7 @@ class SchedulePage(Frame):
         self.master.update()
         self.master.configure(scrollregion=self.master.bbox("all"))
 
-    def editNote(self,id,row,index):
+    def editNote(self, id, row, index):
         try:
             connection = psycopg2.connect(user="usertm",
                                           password="password",
@@ -1027,14 +1071,15 @@ class SchedulePage(Frame):
                                           database="TaskManager")
             cursor = connection.cursor()
             cursor = connection.cursor()
-            title= self.inputTitle.get()
-            note = self.inputNote.get("1.0",END)
-            print(len(self.inputNote.get("1.0","end-1c")))
-            if len(self.inputNote.get("1.0","end-1c"))!=0:
+            title = self.inputTitle.get()
+            note = self.inputNote.get("1.0", END)
+            print(len(self.inputNote.get("1.0", "end-1c")))
+            if len(self.inputNote.get("1.0", "end-1c")) != 0:
                 now = datetime.datetime.now()
                 date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
                 print(date_time)
-                query = "UPDATE note SET title='" + title + "',note='" + note +"',date_modified='"+date_time+"' WHERE note_id="+str(id)+";"
+                query = "UPDATE note SET title='" + title + "',note='" + note + "',date_modified='" + date_time + "' WHERE note_id=" + str(
+                    id) + ";"
                 cursor.execute(query)
                 assistant_speaks("Note edited successfully")
                 connection.commit()
@@ -1042,11 +1087,11 @@ class SchedulePage(Frame):
                 self.displayNoteAction()
             else:
                 assistant_speaks("Note cannot be empty")
-        except (Exception , psycopg2.DatabaseError) as error:
+        except (Exception, psycopg2.DatabaseError) as error:
             connection.rollback()
             print("Error while using PostgreSQL table", error)
         finally:
-        # closing database connection.
+            # closing database connection.
             if (connection):
                 cursor.close()
                 connection.close()
@@ -1062,21 +1107,11 @@ class SchedulePage(Frame):
         print(text)
 
     def actionSpeakNote(self):
-        #self.inputNote.delete(0, END)
+        # self.inputNote.delete(0, END)
         assistant_speaks('Please specify the note to be changed')
         voice = get_audio()
-        self.inputNote.insert(END,voice)
-        print(self.inputNote.get("1.0",END))
-
-
-class DisplayNotePage(Frame):
-    def __init__(self, master):
-        Frame.__init__(self, master)
-        self.back = Button(self, text="Back",
-                           fg="peachpuff", bg="hotpink4",
-                           font=('Verdana', 10, 'bold'),
-                           command=lambda: master.switch_frame(SchedulePage))
-        self.back.grid(row=0, column=0)
+        self.inputNote.insert(END, voice)
+        print(self.inputNote.get("1.0", END))
 
 
 class HelpPage(Frame):
@@ -1089,48 +1124,51 @@ class HelpPage(Frame):
         self.displayAll.grid(row=0, column=0, padx=5, pady=5, sticky='news')
         self.scrollFrame = ScrollFrame(self.displayAll, 440, 450)
         self.scrollFrame.pack(side="top", fill="both", expand=True)
-        label1=Label(self.scrollFrame.viewPort,text="Quick Guide for using the app",font=('Arial', 17, 'bold'),bg="white",fg="palevioletred4")
-        label1.grid(row=0,column=0)
+        label1 = Label(self.scrollFrame.viewPort, text="Quick Guide for using the app", font=('Arial', 17, 'bold'),
+                       bg="white", fg="palevioletred4")
+        label1.grid(row=0, column=0)
         label = Label(self.scrollFrame.viewPort, text="An app for Tasks, To Do and Notes\nall three in one!",
-                      font=('Helvetica', 15), bg="white",fg="Salmon3")
-        label.grid(row=1, column=0,)
-        label = Label(self.scrollFrame.viewPort,text="Instructions for Task:",font=('TimesNewRoman',13,'bold'),bg="darksalmon",fg="maroon")
+                      font=('Helvetica', 15), bg="white", fg="Salmon3")
+        label.grid(row=1, column=0, )
+        label = Label(self.scrollFrame.viewPort, text="Instructions for Task:", font=('TimesNewRoman', 13, 'bold'),
+                      bg="darksalmon", fg="maroon")
         label.grid(row=3, column=0)
-        label = Label(self.scrollFrame.viewPort, text="#Tasks can be added using speech with the help\nof the mic button or manually.",
-                      font=('Helvetica', 13,'bold'), bg="white", fg="gray13")
+        label = Label(self.scrollFrame.viewPort,
+                      text="#Tasks can be added using speech with the help\nof the mic button or manually.",
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
         label.grid(row=4, column=0)
         label = Label(self.scrollFrame.viewPort,
                       text="> Click on the mic, you will hear an assistant speak.\nFirst you need to speak the Task to be added. ",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=5, column=0,sticky=W)
+        label.grid(row=5, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> Next you need to specify the date.While using speech,user can\nuse following formats: day of the week, today, day (date),\nday and month, day month and year.The speech date is converted\n to YYYY-MM-DD format.If not specified current date will be taken.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=6, column=0,sticky=W)
+        label.grid(row=6, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> Lastly, you need to mention the time.It is optional.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=7, column=0,sticky=W)
+        label.grid(row=7, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> Finally,click on the 'ADD' button.\nThe Task will be stored.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=8, column=0,sticky=W)
+        label.grid(row=8, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="#To view the entered tasks:",
-                      font=('Helvetica', 13,'bold'), bg="white", fg="gray13")
+                      font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
         label.grid(row=9, column=0)
         label = Label(self.scrollFrame.viewPort,
                       text="> Click on 'Schedule' present in the home page.Then, click on \n'Display Tasks' to view the tasks entered.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=10, column=0,sticky=W)
+        label.grid(row=10, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> After that you can see a task,by choosing any of the options\nand then accordingly you can view the tasks.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=11, column=0,sticky=W)
+        label.grid(row=11, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> Tasks are displayed according to the option chosen.Next to \nthe tasks,you have two options:one to edit and the \nother to delete the task.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=12, column=0,sticky=W)
+        label.grid(row=12, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="#To edit the entered tasks:",
                       font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
@@ -1138,15 +1176,15 @@ class HelpPage(Frame):
         label = Label(self.scrollFrame.viewPort,
                       text="> The edit button next to the displayed task is to be clicked.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=14, column=0,sticky=W)
+        label.grid(row=14, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> The assistant first asks whether there is any change in the field of\n task,date or time.If yes then,new data is asked to the user.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=15, column=0,sticky=W)
+        label.grid(row=15, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> You can then edit the Task,date or time and after completing\n the changes,click on 'Save changes'",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=16, column=0,sticky=W)
+        label.grid(row=16, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="#To delete the entered tasks:",
                       font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
@@ -1154,7 +1192,7 @@ class HelpPage(Frame):
         label = Label(self.scrollFrame.viewPort,
                       text="> A task can simply be deleted by clicking the delete icon.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=18, column=0,sticky=W)
+        label.grid(row=18, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort, text="Instructions for To Do:", font=('TimesNewRoman', 13, 'bold'),
                       bg="darksalmon", fg="maroon")
         label.grid(row=19, column=0)
@@ -1209,7 +1247,7 @@ class HelpPage(Frame):
         label = Label(self.scrollFrame.viewPort,
                       text="> To clear all Todo: 'CLEAR ALL' or\n'CLEAR LIST' or 'CLEAR' or\nAnything starting with CLEAR.",
                       font=('Arial', 12), bg="white", fg="gray13")
-        label.grid(row=33, column=0,sticky=W)
+        label.grid(row=33, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
                       text="> If the editing of list is done, and now to see the list,\nSay EXIT.",
                       font=('Arial', 12), bg="white", fg="gray13")
@@ -1276,7 +1314,7 @@ class HelpPage(Frame):
         label1 = Label(self.scrollFrame.viewPort, text="Enjoy and make the most of it!!", font=('Arial', 15, 'bold'),
                        bg="white", fg="palevioletred4")
         label1.grid(row=50, column=0)
-        #back
+        # back
         self.back = Button(self, text="Back",
                            fg="peachpuff", bg="hotpink4", font=('Verdana', 10, 'bold'),
                            command=lambda: master.master.master.switch_frame(StartPage))
