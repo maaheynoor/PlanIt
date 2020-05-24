@@ -192,6 +192,9 @@ class StartPage(Frame):
                 cursor.execute(str)
                 rows = cursor.fetchall()
                 i = 0
+                Label(self.scrollBar.viewPort, text='My TODO', background="hotpink4", fg='white', borderwidth=2, width=14,
+                          relief="ridge", font=('Verdana', 15)).grid(row=i, column=0)
+                i += 1
                 for row in rows:
                     Label(self.scrollBar.viewPort, text=row[0], fg="hotpink4", borderwidth=2, width=14,
                           relief="ridge", font=('Verdana', 15)).grid(row=i, column=0)
@@ -234,9 +237,6 @@ class StartPage(Frame):
             elif voice.startswith('open'):
                 self.addTodo['text'] = "Open"
                 self.inputTodo.insert(0, voice[5:])
-            elif voice.startswith('display'):
-                self.addTodo['text'] = "Display"
-                self.inputTodo.insert(0, voice)
             elif voice.startswith('delete'):
                 self.addTodo['text'] = "Delete"
                 self.inputTodo.insert(0, voice[7:])
@@ -267,7 +267,7 @@ class StartPage(Frame):
     def actionAddTodo(self):
         command = self.addTodo['text']
         work = self.inputTodo.get().strip()
-        if self.todoFile is None and command != 'Display':
+        if self.todoFile is None:
             if command == 'Open':
                 self.addTodo['text'] = 'Add'
                 self.todoFile = work
@@ -286,9 +286,6 @@ class StartPage(Frame):
             self.addTodo['text'] = 'Create'
         self.displayTodoInSideFrame()
         self.inputTodo.delete(0, END)
-
-    def displayNoteInSideFrame(self):
-        pass
 
     def actionSpeakNoteTitle(self):
         self.inputTitle.delete(0, END)
