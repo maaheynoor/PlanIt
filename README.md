@@ -18,4 +18,4 @@ pyttsx3,
 tkinter,
 psycopg2
 
-![Homepage](https://user-images.githubusercontent.com/50228870/82469358-83561f80-9ae1-11ea-8d2e-9d1bbb6ae09a.PNG)
+![home](https://user-images.githubusercontent.com/50302756/82754221-2b712e80-9de9-11ea-8b62-bf9159950fe3.PNG)
