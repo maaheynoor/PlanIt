@@ -8,7 +8,8 @@ Special commands are used to create,edit or delete to do list and can further ad
 ## Notes
 Notes can be added using speech or through text and can be displayed,edited or deleted using speech or text.
 #### Requirements
-Python 3.6.0
+Python 3.6.0,
+Internet connection
 #### Modules Required
 DateTime,
 PyAudio,
