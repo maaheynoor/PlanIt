@@ -713,9 +713,9 @@ class SchedulePage(Frame):
                 for label in self.scrollFrame.viewPort.grid_slaves():
                     if int(label.grid_info()["row"]) == row and int(label.grid_info()["column"]) <= 2:
                         label.grid_forget()
-                Label(self.scrollFrame.viewPort, font=self.font, text=task, bg="white").grid(row=row, column=0)
-                Label(self.scrollFrame.viewPort, font=self.font, text=date, bg="white").grid(row=row, column=1)
-                Label(self.scrollFrame.viewPort, font=self.font, text=time, bg="white").grid(row=row, column=2)
+                Label(self.scrollFrame.viewPort, font=self.font, text=task, padx=5, pady=5, bg="white").grid(row=row,column=0,sticky=W)
+                Label(self.scrollFrame.viewPort, font=self.font, text=date, padx=5, pady=5, bg="white").grid(row=row,column=1,sticky=W)
+                Label(self.scrollFrame.viewPort, font=self.font, text=time, padx=5, pady=5, bg="white").grid(row=row,column=2,sticky=W)
                 assistant_speaks("Task edited successfully")
                 connection.commit()
             elif len(task) == 0:
