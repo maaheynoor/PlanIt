@@ -314,7 +314,7 @@ class StartPage(Frame):
             note = self.inputNote.get("1.0", END)
             print(note)
             now = datetime.datetime.now()
-            date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+            date_time = now.strftime("%Y/%m/%d, %H:%M:%S")
             print(date_time)
             if len(self.inputNote.get("1.0", "end-1c")) != 0:
                 str = "INSERT INTO note(note,title,date_created,date_modified) VALUES ('" + note + "','" + title + "','" + date_time + "','" + date_time + "');"
@@ -1073,7 +1073,7 @@ class SchedulePage(Frame):
             print(len(self.inputNote.get("1.0", "end-1c")))
             if len(self.inputNote.get("1.0", "end-1c")) != 0:
                 now = datetime.datetime.now()
-                date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+                date_time = now.strftime("%Y/%m/%d, %H:%M:%S")
                 print(date_time)
                 query = "UPDATE note SET title='" + title + "',note='" + note + "',date_modified='" + date_time + "' WHERE note_id=" + str(
                     id) + ";"
