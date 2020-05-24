@@ -29,15 +29,14 @@ def todoDbAction(command, task, file):
             if command == 'Clear All':
                 str = "delete from todo_names where list_name= '%s'"
                 args = (file)
-        print(str)
-        print(args)
+        else:
+            str= ""
         cursor.execute(str % args)
         connection.commit()
-        print("Successfully edited list")
 
     except (Exception, psycopg2.DatabaseError) as error:
         connection.rollback()
-        print("Error while using PostgresSQL table", error)
+        connection.rollback()
     finally:
         # closing database connection.
         if connection:

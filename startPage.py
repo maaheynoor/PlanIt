@@ -1214,7 +1214,7 @@ class HelpPage(Frame):
                       font=('Helvetica', 13, 'bold'), bg="white", fg="gray13")
         label.grid(row=25, column=0)
         label = Label(self.scrollFrame.viewPort,
-                      text="> To display all the entered Todo list items:\n DISPLAY (list_name)' or\n 'DISPLAY' or\n Anything starting with 'DISPLAY'.",
+                      text="> To display all the entered Todo list items:\n DISPLAY (list_name)' or\n 'DISPLAY'",
                       font=('Arial', 12), bg="white", fg="gray13")
         label.grid(row=26, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
@@ -1242,7 +1242,7 @@ class HelpPage(Frame):
                       font=('Arial', 12), bg="white", fg="gray13")
         label.grid(row=32, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
-                      text="> To clear all Todo: 'CLEAR ALL' or\n'CLEAR LIST' or 'CLEAR' or\nAnything starting with CLEAR.",
+                      text="> To clear all Todo: 'CLEAR ALL' or\n'CLEAR LIST' or 'CLEAR'",
                       font=('Arial', 12), bg="white", fg="gray13")
         label.grid(row=33, column=0, sticky=W)
         label = Label(self.scrollFrame.viewPort,
