@@ -19,3 +19,6 @@ tkinter,
 psycopg2
 
 ![home](https://user-images.githubusercontent.com/50302756/82754221-2b712e80-9de9-11ea-8b62-bf9159950fe3.PNG)
+------------------------------------------
+
+<h4 align="center">Developed with :heart: by <a href="https://github.com/vms141100">V</a><a href="https://github.com/alfiza-shaikh">A</a><a href="https://github.com/maaheynoor">M</a></h4>
